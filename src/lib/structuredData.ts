@@ -4,7 +4,7 @@ export const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: site.name,
-  jobTitle: 'Mobile Engineer',
+  jobTitle: 'Software Engineer',
   url: `${site.url}/`,
   email: `mailto:${site.email}`,
   address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: 'GB' },

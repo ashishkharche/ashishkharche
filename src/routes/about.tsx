@@ -10,7 +10,7 @@ import { ui } from '~/styles/ui'
 
 export const Route = createFileRoute('/about')({
   head: () =>
-    seo({ path: '/about/', title: 'About', description: 'About Ashish Kharche, a mobile engineer in London.' }),
+    seo({ path: '/about/', title: 'About', description: 'About Ashish Kharche, a software engineer in London.' }),
   component: About,
 })
 
@@ -24,7 +24,7 @@ function About() {
         <PageHead title="About" />
         <div {...stylex.props(ui.mt2)}>
           <Prose>
-            <Lead>I'm Ashish Kharche, a mobile engineer living in London.</Lead>
+            <Lead>I'm Ashish Kharche, a software engineer living in London.</Lead>
             <P>
               I studied for an MSc in Software Engineering at <Logo name="kingston" size={20} inline />
               Kingston University, then spent four years at <Logo name="paythru" size={20} inline />

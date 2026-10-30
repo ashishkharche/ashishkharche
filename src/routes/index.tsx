@@ -24,7 +24,7 @@ const heroSizes = '(max-width: 760px) 31vw, 170px'
 
 const homeSeo = seo({
   path: '/',
-  fullTitle: 'Ashish Kharche · Mobile engineer in London',
+  fullTitle: 'Ashish Kharche · Software engineer in London',
   description: site.description,
   type: 'profile',
 })
@@ -55,14 +55,15 @@ function Home() {
               Hi, I'm Ashish.
             </h1>
             <p {...stylex.props(styles.lead)}>
-              I'm a mobile engineer in London working on Android and iOS apps, and the backend and AWS infrastructure
+              I'm a software engineer in London working on Android and iOS apps, and the backend and AWS infrastructure
               behind them.
             </p>
             <p {...stylex.props(styles.sub)}>
               From 2022 to 2026 I worked at <Logo name="paythru" size={20} inline />
               Paythru on payment apps for EV charging, and in 2026 I worked on its new payments platform on AWS. I've
               also done QA on the Grok iOS and web apps at <Logo name="spacexsi" size={20} inline />
-              SpaceX Super Intelligence. I'm looking for a full-time Android, iOS or mobile-focused role in the UK.
+              SpaceX Super Intelligence. I'm looking for a full-time role in the UK in mobile, full-stack, cloud or AI
+              engineering.
             </p>
             <p {...stylex.props(styles.links)}>
               <Link to="/work/" {...stylex.props(ui.link)}>
