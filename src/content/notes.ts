@@ -60,6 +60,9 @@ export function getNote(slug: string): Note | undefined {
 
 /** Parts of the Workout Director series that are planned but not written yet. */
 export const comingNotes = [
+  'Choosing a pose model for the phone',
+  "Most of a rep counter is the reps it doesn't count",
+  'Training a small rep checker on public video',
   'A voice coach that asks before it acts',
   'A small TypeScript backend on AWS Lambda',
   'Shipping without breaking old phones',
