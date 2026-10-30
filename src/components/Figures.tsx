@@ -70,6 +70,42 @@ export function HeroMedia({ shots }: { shots: Screenshot[] }) {
   )
 }
 
+export interface ThemedImage {
+  /** File stem in /assets/img: `<name>-light.webp` and `<name>-dark.webp`. */
+  name: string
+  alt: string
+  width: number
+  height: number
+}
+
+/**
+ * Images with a light and a dark version, side by side. Only the version for the
+ * current theme is shown, so it follows both the system setting and the toggle.
+ */
+export function ThemedFigures({ images, caption }: { images: ThemedImage[]; caption: string }) {
+  return (
+    <figure {...stylex.props(styles.themed)}>
+      {images.map((image) => (
+        <div key={image.name}>
+          {(['light', 'dark'] as const).map((theme) => (
+            <img
+              key={theme}
+              src={`/assets/img/${image.name}-${theme}.webp`}
+              width={image.width}
+              height={image.height}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+              {...stylex.props(styles.themedImg, theme === 'light' ? styles.onlyLight : styles.onlyDark)}
+            />
+          ))}
+        </div>
+      ))}
+      <figcaption {...stylex.props(styles.caption, styles.fullRow)}>{caption}</figcaption>
+    </figure>
+  )
+}
+
 export function Facts({ items }: { items: Array<{ term: string; detail: ReactNode }> }) {
   return (
     <dl {...stylex.props(styles.facts)}>
@@ -98,6 +134,15 @@ const styles = stylex.create({
     outlineColor: colors.phoneEdge,
     outlineOffset: '-1px',
   },
+  themed: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: { default: '1rem', [breakpoints.phone]: '0.5rem' },
+    marginBlock: '2.25rem',
+  },
+  themedImg: { width: '100%', height: 'auto' },
+  onlyLight: { display: colors.sunDisplay },
+  onlyDark: { display: colors.moonDisplay },
   fullRow: { gridColumnStart: 1, gridColumnEnd: -1 },
   caption: {
     marginTop: '0.7rem',

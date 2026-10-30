@@ -1,0 +1,8 @@
+flowchart TB
+  SPEC["Pose spec: a direction per bone,<br/>fixed points for feet and hands"] --> AIM["aim(): rotate each bone onto its direction<br/>(twist kept by a reference axis)"]
+  AIM --> IK["Two-bone IK where an end point is fixed<br/>feet on the floor, hands on the bar"]
+  IK --> GRIP["Grip solver closes the hands"]
+  REF["Reference images"] --> MP["MediaPipe world landmarks<br/>and 2D keypoints"]
+  MP --> T["Joint-angle and spacing targets"]
+  GRIP --> CMP{"Checks and solver<br/>compare the rig with the targets"}
+  T --> CMP

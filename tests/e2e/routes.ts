@@ -9,5 +9,6 @@ export const headings: Record<(typeof routes)[number], string> = {
   '/projects/workout-director/': 'Workout Director',
   '/notes/': 'Notes',
   '/notes/workout-director-1/': 'Counting reps without the video leaving the phone',
+  '/notes/workout-director-2/': 'Drawing exercise figures from code',
   '/about/': 'About',
 }

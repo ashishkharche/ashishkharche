@@ -1,0 +1,11 @@
+flowchart LR
+  REF["Reference images of the move<br/>(used only to measure)"] --> MP["MediaPipe Pose Landmarker Heavy"]
+  MP --> TGT["Targets: joint angles and spacing<br/>plus 2D keypoints"]
+  SPEC["Pose spec (JSON)<br/>bone directions, feet, grip,<br/>muscles, equipment, camera"] --> RIG["Blender: CC0 MakeHuman body<br/>aim(), two-bone IK, grip solver"]
+  RIG --> PAINT["Muscle weights per vertex<br/>coloured by theme"]
+  PAINT --> LINE["Freestyle line art<br/>light and dark"]
+  LINE --> GATE{"Checks"}
+  TGT --> GATE
+  GATE -- "fail: adjust" --> SPEC
+  GATE -- "pass" --> PACK["Asset catalog<br/>start and end, light and dark, @2x and @3x"]
+  PACK --> APP["Exercise screen in the app"]

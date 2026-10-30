@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { Diagram } from '~/components/Diagram'
-import { Shots } from '~/components/Figures'
+import { Shots, ThemedFigures } from '~/components/Figures'
 import { Main } from '~/components/Main'
 import { Muted, Prose, mdxComponents } from '~/components/Prose'
 import { getNoteBody } from '~/content/noteBodies'
@@ -46,7 +46,7 @@ function NotePage() {
           <div {...stylex.props(styles.body)}>
             {/* Body comes from a module-level map of compiled MDX files; nothing is created here. */}
             {/* eslint-disable-next-line react-hooks/static-components */}
-            <Body components={{ ...mdxComponents, Diagram, Shots, Muted }} />
+            <Body components={{ ...mdxComponents, Diagram, Shots, ThemedFigures, Muted }} />
           </div>
         </Prose>
       </div>
