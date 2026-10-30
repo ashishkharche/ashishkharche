@@ -1,0 +1,87 @@
+import onDevice from '../diagrams/01-on-device-boundary.mmd'
+import systemOverview from '../diagrams/02-system-overview.mmd'
+import liveCoach from '../diagrams/04-live-coach-connect.mmd'
+import releaseFlow from '../diagrams/07-release-flow.mmd'
+import forcedUpdate from '../diagrams/08-forced-update.mmd'
+
+I built Workout Director. It is published on the App Store by Shelgaon Ltd. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases. This was work I did before my role at Paythru ended in October 2026.
+
+## The problem
+
+Training on your own, you either count reps in your head or stop to tap a phone. The idea was a phone propped up across the room that counts for you and talks you through the session, without filming you. That last part set the main constraint: the camera feed never leaves the phone. Video is never recorded, saved or uploaded.
+
+<Diagram
+  diagram={onDevice}
+  wide
+  title="Diagram of what stays on the iPhone (camera frames, pose tracking, rep counter, workout state, local log) and what leaves it (short text state notes to the voice coach, synced sets to the backend). Video never leaves the phone."
+  caption="What stays on the iPhone and what leaves it."
+/>
+
+## Counting reps on the device
+
+Pose tracking runs on the phone with Google MediaPipe, and a rep counter sits on top of the pose stream. It covers squats, lunges, push-ups, presses, rows, curls, pull-ups, deadlifts, hip thrusts and glute bridges. Planks and other holds are timed sets instead.
+
+Most of the work was not counting things that aren't reps: half reps, walking, standing up and getting into position. Around the counter, the app gets the person in frame first with a short countdown and prompts such as Move back or Step into frame, and it always leaves a manual path: minus and plus are one tap away, and you can correct the count by voice.
+
+<Shots
+  shots={[
+    { name: 'wd-1-live-coach', alt: 'Live Coach counting goblet squats, 4 of 10 at 16 kg' },
+    { name: 'wd-2-get-ready', alt: 'The 3, 2, 1, Go countdown before a set' },
+    { name: 'wd-3-timed-sets', alt: 'A timed hold showing the time left and a bar' },
+  ]}
+  caption="Counting a set, the countdown before it, and a timed hold. App Store screenshots."
+/>
+
+## A voice coach that asks before it acts
+
+The voice coach is the only feature that needs the network during a set. The phone opens a WebRTC call to a realtime voice model. The model never sees video: it gets short text notes about the workout state over the data channel. The provider key stays inside AWS; the backend checks the user's access and limits and mints a short-lived client secret for each call, and the app falls back to on-device speech recognition and a text reply if the realtime service is unavailable.
+
+The model doesn't change anything itself. When you say "rest for 90 seconds", it replies with a tool call, and the phone runs it against its own workout state and shows a small chip with Undo. Larger edits wait for a Confirm, and ending the workout waits for a spoken yes.
+
+<Diagram
+  diagram={liveCoach}
+  wide
+  title="Sequence diagram of a Live Coach session: the app asks the backend for a session, the backend checks flags and limits, reads the provider key from Secrets Manager and mints a short-lived client secret, then the app talks to the realtime voice model over WebRTC, running tool calls on the phone. If the realtime service is unavailable, the app uses on-device speech recognition and a text request instead."
+  caption="How a Live Coach session connects, and the fallback path."
+/>
+
+## The backend
+
+The backend is TypeScript on AWS Lambda behind API Gateway and CloudFront, defined with the AWS CDK. It is split into functions by job: profile, sessions and sync; the trainer and voice tokens; sign-in; operations; and subscription webhooks. App data is in DynamoDB with point-in-time recovery, and sign-in data is in Postgres on Neon.
+
+Phones in a gym are often offline, so uploads take an idempotency key, which means a retried upload doesn't create a duplicate workout, and sync does a last-write-wins merge so the same log can follow you to another device.
+
+<Diagram
+  diagram={systemOverview}
+  wide
+  title="System overview: the SwiftUI app calls CloudFront and API Gateway, which route to Lambda functions for the API, trainer chat, sign-in, admin and billing webhooks. They use DynamoDB and Secrets Manager; sign-in uses Neon Postgres and Resend; the trainer uses a text model and a realtime voice model; RevenueCat sends webhooks; PostHog handles errors and flags."
+  caption="System overview."
+/>
+
+## Releasing safely
+
+A wrong count is the first thing a user notices, so counting changes shipped behind switches. Camera counting had its own feature flag, internal builds had a pose debug overlay, and individual behaviours had kill switches served from a public config endpoint, so a behaviour could be turned off without waiting for App Review. New counting models ran in shadow mode first, alongside the live counter, without changing the count anyone saw.
+
+Releases followed the same steps every time: a backend diff that stops if it would replace or delete a stateful resource, a health check after each deploy, and an app release that goes through TestFlight, a preflight checklist and a phased rollout. A minimum-version check let the backend ask old builds to update.
+
+<Diagram
+  diagram={releaseFlow}
+  wide
+  title="Flowchart of the release process. Backend: sign in, cdk diff, stop if a stateful resource would be replaced or deleted, otherwise deploy and check health. iOS app: release branch and version bump, archive, upload, wait for App Store Connect, internal TestFlight, a core-feature gate and preflight, then App Review with a phased rollout."
+  caption="The backend and app release steps."
+/>
+
+<Diagram
+  diagram={forcedUpdate}
+  title="Flowchart of the forced update check: on launch the app reads the minimum version from a public config endpoint; if the app is older it shows a Time to update screen, and any API call from an old build gets a 426 response that shows the same screen."
+  caption="How old builds are asked to update."
+/>
+
+## Screens
+
+<Gallery label="Workout Director App Store screenshots" />
+
+<Muted>
+  Screenshots are from the App Store listing. Workout Director is published on the App Store by Shelgaon Ltd. More detail is in the notes: [Counting reps without the video leaving the
+  phone](/notes/workout-director-1/).
+</Muted>

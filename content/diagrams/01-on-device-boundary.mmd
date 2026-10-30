@@ -1,0 +1,13 @@
+flowchart TB
+  subgraph Phone["On the iPhone"]
+    direction TB
+    CAM["Front camera frames"] --> POSE["Pose tracking (MediaPipe, on device)"]
+    POSE --> REPS["Rep counter and form checks"]
+    REPS --> UI["Count on screen, recorded count clips"]
+    REPS --> STATE["Workout state: set, reps, rest"]
+    STATE --> LOG[("Local log (SwiftData)")]
+    LOG --> HK["Apple Health: finished workout"]
+  end
+  STATE -- "short text state notes, no video" --> VOICE["Voice coach (realtime audio)"]
+  LOG -. "signed in: sync sets and sessions" .-> API["Backend API"]
+  CAM -. "video never recorded, saved or uploaded" .-x OUT(("Off the phone"))

@@ -1,12 +1,59 @@
-# Ashish Kharche: personal site
+# ashishkharche.com
 
-Plain HTML and CSS, with a few lines of JavaScript for the theme toggle. No build step.
+Personal site of Ashish Kharche. Static pages built with TanStack Start, styled with StyleX, written in TypeScript and MDX.
 
-Run locally: `python3 -m http.server 4321` in this folder, then open http://localhost:4321
+## Commands
 
-Deploy (when ready): Cloudflare Pages or Vercel, with no build command and the output directory set to this folder. `_headers` applies on Cloudflare Pages.
+```sh
+pnpm install
+pnpm dev            # http://localhost:3000
+pnpm build          # static site in dist/client
+pnpm preview        # serve dist/client on http://localhost:4173
+pnpm check          # everything below, in order
+pnpm typecheck
+pnpm lint
+pnpm format:check
+pnpm test           # Vitest unit tests
+pnpm test:e2e       # Playwright: every page, no-JS, theme, axe in light and dark (needs a build)
+pnpm check:links    # crawls the build and checks every link and image
+pnpm lighthouse     # mobile and desktop scores for every page
+pnpm screenshots    # full-page screenshots at 375, 768 and 1280 in light and dark (needs `pnpm preview` running)
+```
 
-Still to do:
-- Photo: no portrait found. Replace the "AK" span in the intro with an <img> (see the comment in index.html).
-- cv/: copies of the three CVs with the phone number removed. Regenerate them whenever the CVs change.
-- If you edit the inline theme script in <head>, update its sha256 hash in `_headers`.
+Playwright and the screenshot and Lighthouse scripts use the installed Chrome. Set `PW_CHANNEL=chromium` after
+`pnpm exec playwright install chromium` to use Playwright's own browser instead.
+
+## Layout
+
+```
+content/
+  diagrams/*.mmd        Mermaid sources, rendered to SVG at build time
+  notes/*.mdx           notes, one file each, with YAML frontmatter
+  projects/*.mdx        case study text
+plugins/content.ts      Vite plugin: .mmd imports and MDX frontmatter imports
+public/                 favicons, robots.txt, web manifest, fonts, screenshots, social image
+scripts/                post-build step, local server, link check, Lighthouse, screenshots, deploy manifest
+src/
+  routes/               one file per page (TanStack Router file routes)
+  components/           header, footer, cards, figures, prose
+  content/              page data: site links, work history, projects, note list, content rules
+  lib/                  SEO tags, URLs, dates, sitemap, CSP
+  styles/               StyleX tokens and shared styles, global.css (font faces, reset, diagram sizing)
+tests/unit              Vitest
+tests/e2e               Playwright
+```
+
+## Adding a note
+
+Create `content/notes/<slug>.mdx` with frontmatter (`title`, `date` as YYYY-MM-DD, `series`, `part`, `listLabel`,
+`description`), add `/notes/<slug>/` to `sitemapPaths` in `src/content/site.ts`, and remove its title from `comingNotes` in
+`src/content/notes.ts` if it was listed there. Diagrams: add a `.mmd` file to `content/diagrams`, import it in the MDX file and
+use `<Diagram diagram={…} title="…" caption="…" />`.
+
+## Content rules
+
+Kept as tests (`tests/unit/content-rules.test.ts`) and checked again on the built HTML: no personal contact or identity details beyond
+email and profile links, no secrets, no old side projects, and the company and role wording on the Work page stays as agreed. The
+patterns are in `src/content/rules.ts`.
+
+See STACK.md for why the stack is what it is, and DEPLOY.md for deploying.

@@ -1,6 +1,11 @@
+node_modules
+dist
+.output
+.tanstack
+.vinxi
+test-results
+playwright-report
+reports/lighthouse/*.html
+*.log
 .DS_Store
-node_modules/
-.vercel/
-dist/
-build/
-.env*
+screenshots

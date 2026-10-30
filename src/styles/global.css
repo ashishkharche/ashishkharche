@@ -1,0 +1,81 @@
+/*
+  Global CSS: font face and a small reset. Everything else is styled with
+  StyleX next to the components that use it.
+*/
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/Inter-Latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The reset sits in a layer that comes before StyleX's layers, so component styles always win. */
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  h1,
+  h2,
+  h3,
+  p,
+  ul,
+  ol,
+  dl,
+  dd,
+  figure,
+  pre {
+    margin: 0;
+  }
+  ul,
+  ol {
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+  Diagrams: inline SVG from Pele (see plugins/pele.ts). The markup comes from
+  the renderer, so it is sized here rather than through StyleX. On small
+  screens the drawing keeps a readable size (75%) and its box scrolls sideways.
+*/
+svg.pele {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  font-family: inherit;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-transform: none;
+  direction: ltr;
+}
+@media (max-width: 560px) {
+  svg.pele[data-scroll] {
+    max-width: none;
+    zoom: 0.75;
+  }
+}

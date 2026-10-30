@@ -1,0 +1,9 @@
+dist
+.tanstack
+pnpm-lock.yaml
+src/routeTree.gen.ts
+screenshots
+reports
+test-results
+playwright-report
+content/**/*.mdx

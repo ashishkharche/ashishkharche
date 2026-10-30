@@ -1,0 +1,29 @@
+flowchart TB
+  subgraph Phone["iPhone app"]
+    APP["SwiftUI app"]
+    POSE["On-device pose tracking<br/>and rep counter"]
+  end
+  APP --> CF["CloudFront"]
+  CF --> GW["HTTP API Gateway"]
+  subgraph AWS["AWS"]
+    GW --> API["ApiFn<br/>profile, sessions, sync"]
+    GW --> CHAT["ChatFn<br/>trainer, voice tokens"]
+    GW --> AUTH["AuthFn<br/>Better Auth"]
+    GW --> ADMIN["AdminFn<br/>ops"]
+    GW --> BILL["BillingWebhookFn"]
+    API --> DDB[("DynamoDB<br/>6 tables")]
+    CHAT --> DDB
+    ADMIN --> DDB
+    BILL --> DDB
+    SM["Secrets Manager"]
+    CHAT --> SM
+  end
+  AUTH --> NEON[("Neon Postgres<br/>sign-in data")]
+  AUTH --> RES["Resend<br/>email codes"]
+  CHAT --> TXT["Text model<br/>trainer chat"]
+  CHAT -- "mints short-lived<br/>voice token" --> OAI["Realtime voice model"]
+  APP <-- "WebRTC audio" --> OAI
+  RC["RevenueCat"] -- "webhook" --> GW
+  APP --> MCDN["Media CDN<br/>exercise figures"]
+  APP -. "errors, flags" .-> PH["PostHog (EU)"]
+  API -. "flags" .-> PH
