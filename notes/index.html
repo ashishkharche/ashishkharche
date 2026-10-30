@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes · Ashish Kharche</title>
+  <meta name="description" content="Technical notes by Ashish Kharche, starting with a series on how Workout Director is built.">
+  <meta name="author" content="Ashish Kharche">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161513" media="(prefers-color-scheme: dark)">
+  <link rel="canonical" href="https://ashishkharche.com/notes/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ashish Kharche">
+  <meta property="og:title" content="Notes">
+  <meta property="og:description" content="Technical notes by Ashish Kharche, starting with a series on how Workout Director is built.">
+  <meta property="og:url" content="https://ashishkharche.com/notes/">
+  <meta property="og:image" content="https://ashishkharche.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ashish Kharche, mobile engineer in London.">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Notes">
+  <meta name="twitter:description" content="Technical notes by Ashish Kharche, starting with a series on how Workout Director is built.">
+  <meta name="twitter:image" content="https://ashishkharche.com/assets/og.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/SourceSans3-Roman.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="home-link" href="/">Ashish Kharche</a>
+      <nav aria-label="Main">
+        <ul role="list"><li><a href="/work/">Work</a></li><li><a href="/projects/">Projects</a></li><li><a href="/notes/" aria-current="page">Notes</a></li><li><a href="/about/">About</a></li></ul>
+      </nav>
+      <button class="theme-toggle" type="button" aria-label="Switch colour theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><g stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+  <main id="main">
+    <div class="column">
+      <header class="page-head">
+        <h1>Notes</h1>
+        <p class="lead">Technical notes on things I've built.</p>
+      </header>
+      <section class="section" aria-labelledby="series-title">
+        <h2 id="series-title">How Workout Director is built</h2>
+        <p class="muted series-sub">A series on the iPhone app and its backend.</p>
+        <ul class="rows" role="list"><li><a href="/notes/workout-director-1/">Counting reps without the video leaving the phone</a><span class="date">30 Oct 2026</span><span class="desc">Workout Director, part 1</span></li><li><span class="soon">A voice coach that asks before it acts</span><span class="date">Coming</span><span class="desc">Workout Director, part 2</span></li><li><span class="soon">A small TypeScript backend on AWS Lambda</span><span class="date">Coming</span><span class="desc">Workout Director, part 3</span></li><li><span class="soon">Shipping without breaking old phones</span><span class="date">Coming</span><span class="desc">Workout Director, part 4</span></li><li><span class="soon">What I&#x27;d do differently</span><span class="date">Coming</span><span class="desc">Workout Director, part 5</span></li></ul>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p>© <span id="year">2026</span> Ashish Kharche · London</p>
+      <ul role="list" aria-label="Elsewhere">
+        <li><a href="mailto:thekharche@gmail.com">Email</a></li>
+        <li><a href="https://www.linkedin.com/in/ashish-kharche">LinkedIn</a></li>
+        <li><a href="https://github.com/ashishkharche">GitHub</a></li>
+      </ul>
+    </div>
+  </footer>
+  <script src="/assets/main.js" defer></script>
+</body>
+</html>
