@@ -25,13 +25,15 @@ Requires Node 22.18 or newer (the scripts are TypeScript run directly by Node) a
 Upload the contents of `dist/client` as they are, with no build step on Vercel.
 
 1. `pnpm build && pnpm deploy:manifest`. This writes `dist/deploy-manifest.json`: every file under `dist/client` with its path,
-   SHA-1 and size (58 files, about 1.7 MB).
+   SHA-1 and size (about 70 files, 1.7 MB).
 2. Upload each file with the Vercel connector's `upload_file` (body: the file's bytes base64-encoded; `xVercelDigest`: its SHA-1;
    `contentLength`: its size). Files Vercel already has are skipped by digest.
 3. Call `create_deployment` for project `ashishkharche`, scoped to the Vercel team that owns it, with:
    - `files`: the manifest entries (`{ "file": "work/index.html", "sha": "…", "size": … }`),
-   - `projectSettings`: `{ "framework": null, "buildCommand": null, "installCommand": null, "outputDirectory": null }`,
-     so the files are served exactly as uploaded,
+   - `projectSettings`: `{ "framework": null, "buildCommand": "", "installCommand": "", "outputDirectory": null }`.
+     The empty build and install commands tell Vercel to skip both steps and serve the files exactly as uploaded. Leaving
+     them as `null` makes Vercel fall back to the project's framework setting and run `vite build`, which fails because
+     the upload has no source.
    - `target`: `production` (or leave it out for a preview first).
 4. Check the preview URL, then promote or alias it as usual.
 
