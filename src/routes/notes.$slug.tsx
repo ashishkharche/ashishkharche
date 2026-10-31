@@ -65,8 +65,9 @@ const styles = stylex.create({
   meta: { color: colors.muted, fontSize: '1rem' },
   title: {
     marginTop: '0.6rem',
-    fontSize: 'clamp(1.9rem, 5vw, 2.5rem)',
+    fontSize: 'clamp(1.9rem, 4.6vw, 2.5rem)',
     lineHeight: 1.15,
+    textWrap: 'balance',
     fontWeight: 600,
     letterSpacing: '-0.02em',
   },

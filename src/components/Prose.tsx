@@ -58,9 +58,11 @@ export const mdxComponents: MDXComponents = {
 }
 
 const styles = stylex.create({
-  prose: {},
+  // Long words and URLs wrap instead of pushing the page wider on phones.
+  prose: { overflowWrap: 'break-word' },
   block: {
     marginTop: { default: '1.1rem', ':first-child': 0 },
+    textWrap: 'pretty',
   },
   lead: { fontSize: '1.25rem', lineHeight: 1.55 },
   h2: {

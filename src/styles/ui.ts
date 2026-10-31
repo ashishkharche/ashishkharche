@@ -60,11 +60,13 @@ export const ui = stylex.create({
     fontWeight: 600,
     lineHeight: 1.3,
     letterSpacing: '-0.005em',
+    textWrap: 'balance',
   },
   h3: {
     fontSize: '1.15rem',
     fontWeight: 600,
     lineHeight: 1.35,
+    textWrap: 'balance',
   },
   note: { marginTop: '1.5rem', color: colors.muted, fontSize: '1rem' },
   mt06: { marginTop: '0.6rem' },

@@ -14,10 +14,10 @@ export const workIntro = 'My work history, writing for Maestro and the tools I u
 
 export const roles: Role[] = [
   {
-    when: 'Oct 2022 – Oct 2026',
+    when: 'Oct 2022 to Oct 2026',
     org: 'Paythru, London',
     logo: 'paythru',
-    role: 'Senior Mobile Engineer (Mar 2024 – Oct 2026), Mobile Engineer (Oct 2022 – Feb 2024), covering iOS, Android and AWS',
+    role: 'Senior Mobile Engineer (Mar 2024 to Oct 2026), Mobile Engineer (Oct 2022 to Feb 2024), covering iOS, Android and AWS',
     paragraphs: [
       'Paythru makes payments software for EV charging. In a team of ten, I built charging and payment features for about six white-label apps, mostly in Kotlin and Jetpack Compose, with some SwiftUI on iOS. I integrated Adyen for in-app payments and reworked the Bitrise pipeline so builds could go from commit to the stores, which shortened the release cycle. I also built the Kotlin and Jetpack Compose Terminal app for Adyen payment terminals, tested on a Castles S1U2 device.',
       "In 2026 I worked on Paythru's new TypeScript payments platform on AWS, including the infrastructure, with idempotent payment handling, an audit log, monitoring and alarms.",
@@ -33,7 +33,7 @@ export const roles: Role[] = [
     ],
   },
   {
-    when: '2023 – 2024',
+    when: '2023 to 2024',
     org: 'Maestro',
     logo: 'maestro',
     role: 'Developer, contract, alongside Paythru',
@@ -42,7 +42,7 @@ export const roles: Role[] = [
     ],
   },
   {
-    when: '2021 – 2022',
+    when: '2021 to 2022',
     org: 'Kingston University, London',
     logo: 'kingston',
     role: 'MSc Software Engineering',
@@ -51,7 +51,7 @@ export const roles: Role[] = [
 ]
 
 export const certificationsNote =
-  'I previously held the AWS Solutions Architect – Associate and Cloud Practitioner certifications. Both expired in February 2025.'
+  'I previously held the AWS Solutions Architect Associate and Cloud Practitioner certifications. Both expired in February 2025.'
 
 export interface Article {
   title: string

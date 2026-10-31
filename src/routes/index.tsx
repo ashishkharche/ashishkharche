@@ -136,6 +136,7 @@ const styles = stylex.create({
   title: {
     fontSize: 'clamp(2.2rem, 5.4vw, 3.4rem)',
     lineHeight: 1.08,
+    textWrap: 'balance',
     fontWeight: 600,
     letterSpacing: '-0.025em',
   },

@@ -121,7 +121,7 @@ const styles = stylex.create({
     borderBottomStyle: 'solid',
     borderBottomColor: colors.line,
   },
-  when: { color: colors.muted, fontSize: '1rem', paddingTop: '0.1rem' },
+  when: { color: colors.muted, fontSize: '1rem', paddingTop: '0.1rem', textWrap: 'balance' },
   org: { display: 'flex', alignItems: 'center', gap: '0.75rem' },
   mark: { display: 'flex', justifyContent: 'center', width: '2.6rem', flex: 'none' },
   role: { color: colors.muted, marginTop: '0.4rem' },

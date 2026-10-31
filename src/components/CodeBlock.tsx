@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { useRef, useState, useSyncExternalStore } from 'react'
 import type { ComponentPropsWithoutRef } from 'react'
-import { colors, fonts } from '~/styles/tokens.stylex'
+import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 const languageNames: Record<string, string> = {
@@ -81,6 +81,8 @@ const styles = stylex.create({
   block: {
     marginTop: { default: '1.5rem', ':first-child': 0 },
     marginBottom: '1.5rem',
+    // On wider screens the box reaches past the text column, so the code lines up with the text.
+    marginInline: { default: null, [breakpoints.desktop]: '-1rem' },
     backgroundColor: colors.codeBg,
     borderWidth: '1px',
     borderStyle: 'solid',
