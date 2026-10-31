@@ -32,6 +32,6 @@ const styles = stylex.create({
     justifyContent: 'space-between',
     alignItems: 'baseline',
     gap: '1rem',
-    marginBottom: '1.4rem',
+    marginBottom: '2rem',
   },
 })

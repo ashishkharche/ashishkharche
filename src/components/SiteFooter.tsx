@@ -49,10 +49,7 @@ export function SiteFooter() {
 
 const styles = stylex.create({
   footer: {
-    marginTop: '5rem',
-    borderTopWidth: '1px',
-    borderTopStyle: 'solid',
-    borderTopColor: colors.line,
+    marginTop: { default: '8rem', [breakpoints.phone]: '6rem' },
     color: colors.muted,
     fontSize: '0.95rem',
     overflow: 'hidden',

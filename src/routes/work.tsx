@@ -24,7 +24,7 @@ export const Route = createFileRoute('/work')({
 function Work() {
   return (
     <Main>
-      <div {...stylex.props(ui.column)}>
+      <div {...stylex.props(ui.columnWide)}>
         <PageHead title="Work" lead={workIntro} />
 
         <section aria-labelledby="roles-title" {...stylex.props(ui.section)}>

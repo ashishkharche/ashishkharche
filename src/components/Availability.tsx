@@ -1,6 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
 import { links, site } from '~/content/site'
-import { colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 /** Short contact note with the phone-free CV downloads. Used on the home, work and about pages. */
@@ -38,14 +37,7 @@ export function Availability({ email = true }: { email?: boolean }) {
 }
 
 const styles = stylex.create({
-  box: {
-    marginTop: '1rem',
-    paddingBlock: '1rem',
-    paddingInline: '1.25rem',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: colors.line,
-    borderRadius: '0.5rem',
-  },
+  // No border: the note sits on the page background like the text around it.
+  box: { marginTop: '1.5rem' },
   strong: { fontWeight: 600 },
 })

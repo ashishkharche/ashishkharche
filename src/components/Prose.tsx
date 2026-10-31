@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import { CodeBlock } from '~/components/CodeBlock'
-import { colors, fonts } from '~/styles/tokens.stylex'
+import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 /** Container for long-form text: case studies, notes and the About page. */
@@ -61,15 +61,14 @@ const styles = stylex.create({
   // Long words and URLs wrap instead of pushing the page wider on phones.
   prose: { overflowWrap: 'break-word' },
   block: {
-    marginTop: { default: '1.1rem', ':first-child': 0 },
+    marginTop: { default: '1.35rem', ':first-child': 0 },
     textWrap: 'pretty',
   },
   lead: { fontSize: '1.25rem', lineHeight: 1.55 },
   h2: {
-    marginTop: { default: '3rem', ':first-child': 0 },
-    fontSize: '1.8rem',
+    marginTop: { default: '4.5rem', ':first-child': 0, [breakpoints.phone]: '3.5rem' },
   },
-  h3: { marginTop: { default: '2rem', ':first-child': 0 } },
+  h3: { marginTop: { default: '2.5rem', ':first-child': 0 } },
   list: { paddingLeft: '1.25rem' },
   item: {
     marginTop: { default: '0.45rem', ':first-child': 0 },

@@ -8,11 +8,16 @@ const focusRing = {
 
 export const ui = stylex.create({
   wrap: {
-    width: `min(100% - ${layout.gutter}, ${layout.wide})`,
+    // A little more room at the sides on phones.
+    width: { default: `min(100% - ${layout.gutter}, ${layout.wide})`, [breakpoints.phone]: 'calc(100% - 3rem)' },
     marginInline: 'auto',
   },
   column: {
-    width: `min(100% - ${layout.gutter}, ${layout.column})`,
+    width: { default: `min(100% - ${layout.gutter}, ${layout.column})`, [breakpoints.phone]: 'calc(100% - 3rem)' },
+    marginInline: 'auto',
+  },
+  columnWide: {
+    width: { default: `min(100% - ${layout.gutter}, ${layout.columnWide})`, [breakpoints.phone]: 'calc(100% - 3rem)' },
     marginInline: 'auto',
   },
   narrow: { maxWidth: layout.column },
@@ -52,21 +57,39 @@ export const ui = stylex.create({
     whiteSpace: 'nowrap',
     borderWidth: 0,
   },
+  /**
+   * A page section: a wide gap above it, with a soft line of hills and the AK
+   * mark from the footer art drawn in the middle of the gap. The drawing is a
+   * mask filled with the muted text colour, so it follows the theme.
+   */
   section: {
-    marginTop: { default: '4.5rem', [breakpoints.phone]: '3.5rem' },
+    marginTop: { default: 'clamp(4.5rem, 8vw, 6.5rem)', [breakpoints.phone]: '3.5rem' },
+    '::before': {
+      content: '""',
+      display: 'block',
+      height: { default: '64px', [breakpoints.phone]: '48px' },
+      marginBottom: { default: 'clamp(3.5rem, 6vw, 5rem)', [breakpoints.phone]: '3rem' },
+      backgroundColor: colors.muted,
+      opacity: colors.artOpacity,
+      maskImage: 'url("/assets/img/section-hills.svg")',
+      maskRepeat: 'no-repeat',
+      maskPosition: 'center bottom',
+      maskSize: 'auto 100%',
+      pointerEvents: 'none',
+    },
   },
   h2: {
     fontFamily: fonts.serif,
-    fontSize: '1.7rem',
+    fontSize: 'clamp(1.9rem, 3.4vw, 2.4rem)',
     fontWeight: 400,
-    lineHeight: 1.2,
-    letterSpacing: '-0.005em',
+    lineHeight: 1.25,
+    letterSpacing: '-0.01em',
     textWrap: 'balance',
   },
   h3: {
     fontSize: '1.15rem',
-    fontWeight: 600,
-    lineHeight: 1.35,
+    fontWeight: 500,
+    lineHeight: 1.45,
     textWrap: 'balance',
   },
   note: { marginTop: '1.5rem', color: colors.muted, fontSize: '1rem' },
