@@ -66,7 +66,9 @@ was not prerendered, a link preview image is missing or the wrong size, or a CV 
 again against the built HTML.
 
 Other scripts: `pnpm screenshots` (full-page screenshots at three widths in light and dark, with `pnpm preview` running) and
-`pnpm og-images` (redraws the link preview cards in `public/assets/og`).
+`pnpm og-images` (redraws the link preview cards in `public/assets/og`). `pnpm wd-screens <folder>` makes the AVIF and WebP copies of the
+Workout Director App Store screens in `public/assets/img/wd`; which screens are shown is set in
+`src/content/workoutDirectorScreens.ts`.
 
 ## Deployment
 

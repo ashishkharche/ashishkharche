@@ -30,7 +30,7 @@
     "accessibility": 100,
     "bestPractices": 100,
     "seo": 100,
-    "lcp": "0.8 s",
+    "lcp": "1.2 s",
     "tbt": "0 ms",
     "cls": "0",
     "failing": ""
@@ -38,11 +38,11 @@
   {
     "formFactor": "mobile",
     "path": "/projects/workout-director/",
-    "performance": 100,
+    "performance": 99,
     "accessibility": 100,
     "bestPractices": 100,
     "seo": 100,
-    "lcp": "0.9 s",
+    "lcp": "2.0 s",
     "tbt": "0 ms",
     "cls": "0",
     "failing": ""
@@ -73,6 +73,18 @@
   },
   {
     "formFactor": "mobile",
+    "path": "/notes/workout-director-2/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "0.9 s",
+    "tbt": "0 ms",
+    "cls": "0",
+    "failing": ""
+  },
+  {
+    "formFactor": "mobile",
     "path": "/about/",
     "performance": 100,
     "accessibility": 100,
@@ -90,7 +102,7 @@
     "accessibility": 100,
     "bestPractices": 100,
     "seo": 100,
-    "lcp": "0.3 s",
+    "lcp": "0.6 s",
     "tbt": "0 ms",
     "cls": "0",
     "failing": ""
@@ -114,7 +126,7 @@
     "accessibility": 100,
     "bestPractices": 100,
     "seo": 100,
-    "lcp": "0.4 s",
+    "lcp": "0.3 s",
     "tbt": "0 ms",
     "cls": "0",
     "failing": ""
@@ -157,12 +169,24 @@
   },
   {
     "formFactor": "desktop",
-    "path": "/about/",
+    "path": "/notes/workout-director-2/",
     "performance": 100,
     "accessibility": 100,
     "bestPractices": 100,
     "seo": 100,
     "lcp": "0.3 s",
+    "tbt": "0 ms",
+    "cls": "0",
+    "failing": ""
+  },
+  {
+    "formFactor": "desktop",
+    "path": "/about/",
+    "performance": 100,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "lcp": "0.2 s",
     "tbt": "0 ms",
     "cls": "0",
     "failing": ""

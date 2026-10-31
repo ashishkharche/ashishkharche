@@ -5,18 +5,22 @@ import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
 import { ProjectCard } from '~/components/ProjectCard'
 import { kaloCard, workoutDirectorCard } from '~/content/projects'
+import { stagePreload } from '~/content/workoutDirectorScreens'
 import { seo } from '~/lib/seo'
 import { breakpoints } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 export const Route = createFileRoute('/projects/')({
-  head: () =>
-    seo({
+  head: () => {
+    const head = seo({
       path: '/projects/',
       title: 'Projects',
       description: 'Projects by Ashish Kharche: Workout Director and Kalo.',
       image: ogImages.projects,
-    }),
+    })
+    const stage = workoutDirectorCard.stage
+    return { ...head, links: stage ? [...head.links, stagePreload(stage)] : head.links }
+  },
   component: Projects,
 })
 

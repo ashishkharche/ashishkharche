@@ -28,3 +28,10 @@ test('the note page has its diagrams and screenshots', async ({ page }) => {
   await expect(page.locator('figure svg.pele')).toHaveCount(2)
   await expect(page.locator('figure img')).toHaveCount(3)
 })
+
+test('the case study screens are all there without JavaScript, with no dead buttons', async ({ page }) => {
+  await page.goto('/projects/workout-director/')
+  await expect(page.getByRole('group', { name: 'iPhone screens, scrolls sideways' }).locator('img')).toHaveCount(7)
+  await expect(page.getByRole('group', { name: 'iPad screens, scrolls sideways' }).locator('img')).toHaveCount(7)
+  await expect(page.getByRole('button', { name: /screens$/ })).toHaveCount(0)
+})

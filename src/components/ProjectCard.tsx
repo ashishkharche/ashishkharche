@@ -1,6 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { Logo } from './Logo'
+import { DeviceStage } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
 
@@ -12,8 +13,10 @@ interface Props {
 }
 
 /**
- * A project shown as its screenshots, large and straight on the page, with the
- * title and summary underneath. Projects after the first get a thin rule above.
+ * A project shown as its screenshots, large on the page, with the title and
+ * summary underneath: either three phone screens in a row or, for a project
+ * with a stage, an iPad and two iPhones layered on a soft panel. Projects after
+ * the first get a thin rule above.
  */
 export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Props) {
   const Heading = headingLevel
@@ -28,23 +31,27 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
   )
   return (
     <article {...stylex.props(stylex.defaultMarker(), styles.project)}>
-      <div {...stylex.props(styles.media)}>
-        {card.shots.map((shot, index) => (
-          <img
-            key={shot.name}
-            src={screenshotSrc(shot.name)}
-            srcSet={screenshotSrcSet(shot.name)}
-            sizes="(max-width: 760px) 30vw, 290px"
-            width={480}
-            height={1038}
-            alt={shot.alt}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority && index === 1 ? 'high' : 'auto'}
-            decoding="async"
-            {...stylex.props(styles.phone)}
-          />
-        ))}
-      </div>
+      {card.stage ? (
+        <DeviceStage ipad={card.stage.ipad} phones={card.stage.phones} priority={priority} />
+      ) : (
+        <div {...stylex.props(styles.media)}>
+          {(card.shots ?? []).map((shot, index) => (
+            <img
+              key={shot.name}
+              src={screenshotSrc(shot.name)}
+              srcSet={screenshotSrcSet(shot.name)}
+              sizes="(max-width: 760px) 30vw, 290px"
+              width={480}
+              height={1038}
+              alt={shot.alt}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority && index === 1 ? 'high' : 'auto'}
+              decoding="async"
+              {...stylex.props(styles.phone)}
+            />
+          ))}
+        </div>
+      )}
       <div {...stylex.props(styles.body)}>
         <div {...stylex.props(styles.head)}>
           <Logo name={card.logo} size={40} />

@@ -30,7 +30,7 @@ const cards: Card[] = [
     title: 'Workout Director',
     subtitle: 'An iPhone and iPad training app that counts reps on the device, with a voice coach.',
     footer: 'SwiftUI · TypeScript on AWS Lambda',
-    phones: ['/assets/img/wd-1-live-coach-960.webp', '/assets/img/wd-4-today-plan-960.webp'],
+    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp', '/assets/img/wd/iphone/07-progress-800.webp'],
   },
   {
     src: ogImages.projects.src,
@@ -38,14 +38,14 @@ const cards: Card[] = [
     title: 'Workout Director and Kalo',
     subtitle: 'Two iPhone apps: a training app that counts reps and a macro tracker.',
     footer: 'ashishkharche.com/projects',
-    phones: ['/assets/img/wd-1-live-coach-960.webp', '/assets/img/kalo-2-photo-960.webp'],
+    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp', '/assets/img/kalo-2-photo-960.webp'],
   },
   {
     src: noteOgImages['workout-director-1'].src,
     eyebrow: 'Notes · Workout Director, part 1',
     title: 'Counting reps without the video leaving the phone',
     footer: 'ashishkharche.com/notes',
-    phones: ['/assets/img/wd-1-live-coach-960.webp'],
+    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp'],
   },
   {
     src: noteOgImages['workout-director-2'].src,

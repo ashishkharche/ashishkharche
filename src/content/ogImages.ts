@@ -20,7 +20,7 @@ export const ogImages = {
   },
   workoutDirector: {
     src: '/assets/og/workout-director.png',
-    alt: 'Workout Director case study, with screens of Live Coach counting reps and the day plan.',
+    alt: 'Workout Director case study, with App Store screens for rep counting and progress.',
   },
 } satisfies Record<string, OgImage>
 

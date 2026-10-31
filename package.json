@@ -23,7 +23,8 @@
     "lighthouse": "node scripts/lighthouse.ts",
     "screenshots": "node scripts/screenshots.ts",
     "og-images": "node scripts/og-images.ts",
-    "compare": "node scripts/compare-content.ts"
+    "compare": "node scripts/compare-content.ts",
+    "wd-screens": "node scripts/wd-screens.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -58,6 +59,7 @@
     "prettier": "^3.9.10",
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^6.0.0",
+    "sharp": "^0.35.5",
     "shiki": "^4.5.0",
     "sirv": "^3.0.2",
     "typescript": "npm:@typescript/typescript6@^6.0.2",

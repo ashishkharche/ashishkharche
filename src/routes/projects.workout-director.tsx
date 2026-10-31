@@ -3,34 +3,43 @@ import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import CaseStudy from '#content/projects/workout-director.mdx'
 import { Diagram } from '~/components/Diagram'
-import { Facts, Gallery, HeroMedia, Shots } from '~/components/Figures'
+import { Facts } from '~/components/Figures'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
 import { Muted, Prose, mdxComponents } from '~/components/Prose'
-import { workoutDirectorCard, workoutDirectorGallery } from '~/content/projects'
+import { DeviceStage, ScreenRail, Shots } from '~/components/Screens'
+import { workoutDirectorCard, workoutDirectorHero } from '~/content/projects'
 import { links } from '~/content/site'
+import { stagePreload } from '~/content/workoutDirectorScreens'
 import { seo } from '~/lib/seo'
 import { colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
+const pageSeo = () =>
+  seo({
+    path: '/projects/workout-director/',
+    title: 'Workout Director',
+    description:
+      'Case study: an iPhone training app that counts reps on the device and has a voice coach. SwiftUI app and a TypeScript backend on AWS Lambda.',
+    type: 'article',
+    image: ogImages.workoutDirector,
+  })
+
 export const Route = createFileRoute('/projects/workout-director')({
-  head: () =>
-    seo({
-      path: '/projects/workout-director/',
-      title: 'Workout Director',
-      description:
-        'Case study: an iPhone training app that counts reps on the device and has a voice coach. SwiftUI app and a TypeScript backend on AWS Lambda.',
-      type: 'article',
-      image: ogImages.workoutDirector,
-    }),
+  head: () => {
+    const head = pageSeo()
+    return { ...head, links: [...head.links, stagePreload(workoutDirectorHero)] }
+  },
   component: WorkoutDirector,
 })
 
+/** Every App Store screen, for iPhone and then iPad, wider than the text column. */
 function ScreensGallery() {
   return (
     <div {...stylex.props(ui.wide, styles.gallery)}>
-      <Gallery shots={workoutDirectorGallery} label="Workout Director App Store screenshots" />
+      <ScreenRail device="iphone" title="iPhone" />
+      <ScreenRail device="ipad" title="iPad" />
     </div>
   )
 }
@@ -47,7 +56,12 @@ function WorkoutDirector() {
           lead={workoutDirectorCard.summary}
           icon={<Logo name="workoutDirector" size={40} />}
         />
-        <HeroMedia shots={workoutDirectorCard.shots} />
+        <DeviceStage
+          {...workoutDirectorHero}
+          size="hero"
+          priority
+          label="Workout Director App Store screens on iPad and iPhone"
+        />
       </div>
       <div {...stylex.props(ui.column)}>
         <Facts
@@ -89,5 +103,5 @@ const styles = stylex.create({
     color: { default: colors.muted, ':hover': colors.accent },
     textDecorationLine: 'none',
   },
-  gallery: { marginTop: '1.25rem', marginBottom: '2rem' },
+  gallery: { marginTop: '0.5rem', marginBottom: '2rem' },
 })

@@ -24,12 +24,8 @@ Pose tracking runs on the phone with Google MediaPipe, and a rep counter sits on
 Most of the work was not counting things that aren't reps: half reps, walking, standing up and getting into position. Around the counter, the app gets the person in frame first with a short countdown and prompts such as Move back or Step into frame, and it always leaves a manual path: minus and plus are one tap away, and you can correct the count by voice.
 
 <Shots
-  shots={[
-    { name: 'wd-1-live-coach', alt: 'Live Coach counting goblet squats, 4 of 10 at 16 kg' },
-    { name: 'wd-2-get-ready', alt: 'The 3, 2, 1, Go countdown before a set' },
-    { name: 'wd-3-timed-sets', alt: 'A timed hold showing the time left and a bar' },
-  ]}
-  caption="Counting a set, the countdown before it, and a timed hold. App Store screenshots."
+  screens={['01-rep-counting', '03-live-coach', '04-manual']}
+  caption="Counting a goblet squat set, the voice coach before push-ups, and typing in reps without the camera. App Store screenshots."
 />
 
 ## A voice coach that asks before it acts
@@ -79,7 +75,7 @@ Releases followed the same steps every time: a backend diff that stops if it wou
 
 ## Screens
 
-<Gallery label="Workout Director App Store screenshots" />
+<Gallery />
 
 <Muted>
   Screenshots are from the App Store listing. Workout Director is published on the App Store by Shelgaon Ltd. More detail is in the notes: [Counting reps without the video leaving the

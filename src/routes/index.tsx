@@ -3,11 +3,11 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
-import { PhoneRow } from '~/components/PhoneRow'
+import { PhoneRow, type PhoneShot } from '~/components/PhoneRow'
 import { ProjectCard } from '~/components/ProjectCard'
 import { Rows } from '~/components/Rows'
 import { SectionHead } from '~/components/SectionHead'
-import { kaloCard, workoutDirectorCard, type Screenshot } from '~/content/projects'
+import { kaloCard, workoutDirectorCard } from '~/content/projects'
 import { notes, noteSummary } from '~/content/notes'
 import { site } from '~/content/site'
 import { formatShortDate } from '~/lib/dates'
@@ -16,10 +16,10 @@ import { personJsonLd } from '~/lib/structuredData'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
-const heroShots: [Screenshot, Screenshot, Screenshot] = [
-  { name: 'kalo-2-photo', alt: '' },
-  { name: 'wd-1-live-coach', alt: '' },
-  { name: 'wd-6-progress', alt: '' },
+const heroShots: [PhoneShot, PhoneShot, PhoneShot] = [
+  { kalo: 'kalo-2-photo' },
+  { workoutDirector: '01-rep-counting' },
+  { workoutDirector: '07-progress' },
 ]
 const heroSizes = '(max-width: 760px) 31vw, 170px'
 
