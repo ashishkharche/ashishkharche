@@ -1,0 +1,88 @@
+---
+title: A workout summary that only says what the camera saw
+date: '2026-10-31'
+series: How Workout Director is built
+part: 6
+listLabel: Workout Director, part 6
+description: 'Workout Director, part 6: the rules behind the set summary and the end-of-workout recap. Every number says where it came from, observations are not verdicts, and a section with no data is left out.'
+---
+
+
+After each set, Workout Director shows a short summary. After the workout, it gives a spoken recap, such as "40 reps across 4 sets. No partial reps seen on camera." Both are built from one principle: only say what the app actually measured. This note covers the rules behind that and the bug that made me write them down. The partial reps it reports are the ones described in [part 4](/notes/workout-director-4/).
+
+## The problem
+
+A summary screen tempts you to fill every slot. A form score, a trend arrow, a pace figure: they all make a screen look complete. But a phone camera on the floor sees a joint angle, not a body. It misses frames when someone steps out of view. It sees nothing at all when the set was counted by hand. A summary that sounds confident about things the camera didn't see teaches people to ignore it.
+
+## Rule 1: every number says where it came from
+
+Each set carries a provenance line:
+
+- "counted by the camera"
+- "camera count, corrected" (the camera counted and the person adjusted it)
+- "counted by you" (entered by hand)
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-set-summary-capture',
+      width: 720,
+      height: 900,
+      alt: "A Workout Director set summary captured in the simulator: \"Set 1 of 4, Goblet squat\", \"Right on target. Same again next set.\", 10 of 10 reps, 16 kg, \"Same as last time\", a strip of ten rep tiles with one outlined and \"1 rep didn't count. Go a bit lower.\", then the rest timer at 1:28 with \"+15 s\" and \"Skip rest\" buttons.",
+    },
+  ]}
+  caption={"A simulator capture from a 1.0.91 development build with a demo set. The fuller set summary shown here is not on the App Store yet. The timer digit was mid-animation when the capture was taken."}
+/>
+
+## Rule 2: observed means the camera really watched
+
+A camera set only counts as observed if the move's joints were tracked in at least 60% of its frames. Below that, the set still counts, but the app makes no claims about it. A hand-counted set is never observed.
+
+That one threshold feeds everything after it. Partial-rep counts, trends and the recap line all look at observed sets only.
+
+## Rule 3: observations, not verdicts
+
+The wording is deliberately narrow:
+
+- Zero partial reps reads as "No partial reps seen on camera." It doesn't say "Good form". The camera didn't see a partial, and that's all it can say.
+- Losing tracking reads as "The camera lost sight of you at times." It's reported as a visibility problem, never as getting worse.
+- A partial rep reads as "1 rep didn't count", with the same cue the coach said during the set ("Go a bit lower.") underneath, so the advice afterwards matches the advice in the moment.
+
+## Rule 4: trends need equal exposure
+
+A line like "Fewer partial reps seen later" or "More partial reps seen later" needs at least two observed sets, and every set in the workout observed. If the camera watched the first two sets closely and lost sight of you in the last one, comparing them would be comparing different amounts of looking.
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-set-details-capture',
+      width: 720,
+      height: 900,
+      alt: "The same set summary scrolled down, with the \"Set details\" section open: set 1 now at 10 reps and 16 kg, the same as last time, sets 2 to 4 planned at 10 reps and 16 kg, and under \"How it went\": \"Counted by the camera\" and \"About 2.5 s a rep, about 25 s for the set\".",
+    },
+  ]}
+  caption={"The same simulator capture, scrolled. The pace line appears only because it falls inside the plausible range. Demo data."}
+/>
+
+## Rule 5: empty means left out
+
+Pace per rep is shown only when it is plausible: between 0.6 and 12 seconds a rep, with more than 2 seconds of working time. A set summary with no data for a section leaves the section out, rather than showing a zero or a dash. The rule is written at the top of the set summary code: "Only facts the app measured are shown; a section with no data is left out."
+
+## The bug
+
+On 27 October 2026 I rewrote the recap around a single observation policy. Before that change, separate parts of the recap made separate decisions: hand-counted sets and sets with little camera coverage could still get a form verdict, zero partial reps could read as good form, and a lost view could read as getting worse. The fix put one policy behind the recap's text, its speech and its strip of sets, so they can't disagree.
+
+## How it is built
+
+The set summary and the recap wording are pure functions: data in, sentences out, with no view code. That makes them easy to unit test, and the tests check the wording itself. Changing the layout can't quietly change what the app claims.
+
+## Tradeoffs
+
+- **Less to show.** Some sets end with a very short summary. That's honest, but it looks sparse next to apps that show a score for everything.
+- **A threshold is still a choice.** 60% coverage is a line I picked. Below it the camera saw too little to say anything useful.
+- **Manual sets get nothing extra.** Someone who counts by hand gets their reps logged and no commentary. I think that's right, because the app didn't see the set.
+
+<Muted>
+  Workout Director is published on the App Store by Shelgaon Ltd. [App
+  Store](https://apps.apple.com/gb/app/workout-director-gym-home/id6813645709)
+</Muted>

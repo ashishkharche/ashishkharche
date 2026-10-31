@@ -1,0 +1,98 @@
+---
+title: Choosing a pose model for the phone
+date: '2026-10-31'
+series: How Workout Director is built
+part: 3
+listLabel: Workout Director, part 3
+description: 'Workout Director, part 3: which pose model runs on the iPhone and why, the fallbacks around it, and how the app decides which joints to believe before anything is counted.'
+---
+
+
+[Part 1](/notes/workout-director-1/) set the rule that shapes everything here: the camera feed stays on the phone, and video is never recorded, saved or uploaded. So the pose model has to run on the device, 30 times a second, without making the phone too hot to hold. This note covers which model I chose, what sits around it in case it fails, and how the app decides which joints to believe before the rep counter sees anything.
+
+## The problem
+
+A rep counter needs to know where your knees, hips and elbows are, many times a second. It doesn't need the picture. If the app only ever works from joint positions, there is nothing to keep. The hard part is that joint positions from a single phone camera are noisy. They jump when the model loses track for a frame, when someone walks behind you, or when the phone itself moves. Each of those becomes a false rep unless something catches it before the counter.
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-joints-and-knee-angle',
+      width: 720,
+      height: 900,
+      alt: "A stock video frame of a woman at the bottom of a bodyweight squat, with the hip, knee and ankle joints drawn over her right leg and the knee angle marked as 73 degrees. Below, a chart of her right knee angle over 30 seconds shows four deep dips, with dashed lines at 155 degrees (rest) and 110 degrees (work) and a red vertical line at each of the four counted reps.",
+    },
+  ]}
+  caption={"A stock clip (Pexels) run through MediaPipe Pose Landmarker on my computer, with the app's squat lines drawn on the knee angle. The red lines are where a copy of the app's rep logic counted. The app does this on the phone and never records the video."}
+/>
+
+## From frame to joints
+
+An `AVCaptureSession` hands each frame to a video data output delegate. Nothing in the live path writes frames to a file. The frame goes to the pose model, the model returns the joints, and the frame is dropped. From then on the app works only with points and angles.
+
+## Which model
+
+The app uses Google's MediaPipe Pose Landmarker, which comes in three sizes of the BlazePose model: Lite, Full and Heavy. The model file is bundled in the app, so it works signed out and offline.
+
+- **Lite** was the default when BlazePose first replaced Apple's body pose as the main engine, in version 1.0.19.
+- **Full** has been the shipped model since 1.0.35. In stream mode on exercise clips it was noticeably steadier from one frame to the next than Lite, and steadiness matters more to a rep counter than anything else: a joint that jitters across a line is a phantom rep. It costs about 4 ms more per frame on a desktop CPU and adds 3.6 MB to the app.
+- **Heavy** adds 21 MB and takes about three times as long as Full per frame. For live counting at 30 frames a second, that wasn't worth it.
+
+The choice is one line in the code. A build script reads that line and copies the matching `.task` file into the app, so the model in the bundle and the model the code asks for can't drift apart.
+
+## Safety nets
+
+Changing the pose model is the riskiest change in the app, because every count depends on it. So there are three ways back to Apple's Vision body pose, which is built into iOS:
+
+- **Per session.** If BlazePose fails to start, or runs below 12 frames a second, that session falls back to Apple's Vision.
+- **From the server.** A Remote Config value can make Apple's engine the default for everyone, without a new build.
+- **A kill switch.** A separate flag turns BlazePose off entirely.
+
+The last two mean a bad model change can be undone from the server, without waiting for a new build to get through App Review.
+
+## Deciding which joints to believe
+
+The model's output still isn't ready to count. Several steps sit between it and the counter.
+
+**One person.** One person is locked for the set, so someone walking behind you can't take over the count.
+
+**Smoothing.** The joints go through a One Euro filter. It smooths small jitter when a joint is nearly still and follows quickly when it moves, so it adds little lag on a real rep.
+
+**One angle.** Then the joints are reduced to the single angle the move needs: the knee for a squat, the hip for a deadlift, the elbow for a push-up or a curl. [Part 4](/notes/workout-director-4/) covers how that angle becomes a count.
+
+**Glitches.** If the angle jumps more than 60° in one frame and the next frame doesn't come back within 30° of it, the jump is thrown away. One bad frame from the model can't become a rep.
+
+## The bug that taught me the most
+
+On 22 October 2026, push-ups were picking up false reps when the phone was handheld or nudged. The elbow angle really did change on screen, because the whole picture moved.
+
+The fix had three parts. A rep only counts if the joints that make up the angle were actually seen in that frame. A frame where even the stillest required joint jumped is treated as the phone moving, not the arm. And a short, silent arming period has to see the joints held steadily before counting starts. The commit message puts the rule in one line: "the phone moved, not the arm".
+
+The day before, I had fixed a different version of the same problem. For rows and lunges, the side lock had stuck on the arm or leg that wasn't moving, so the counter was watching a still limb. Both bugs had the same lesson: most of the work after the model is deciding which numbers to believe.
+
+## Heat
+
+Running a pose model 30 times a second makes a phone warm, and people often train in warm rooms. The app reads the thermal state and Low Power Mode and picks a pace:
+
+```text
+nominal / fair            30 fps
+serious, or Low Power     15 fps
+critical                  stop camera counting, switch the set to manual
+```
+
+At critical heat it says "Switching to manual counting." once, rather than counting badly.
+
+## Tradeoffs
+
+- **No video means no replay.** When a count is wrong, I can't look at the footage, because there isn't any. Debugging works from pose data replayed from public clips instead.
+- **A bigger model isn't automatically a better counter.** A live counter cares about steadiness and frame rate as much as precision, and Heavy's size and latency cost too much of the second.
+- **Two engines means two behaviours.** The Vision fallback keeps counting going, but it is a different model with different noise. The guards after the model have to work for both.
+
+## What I'd keep
+
+Making the model a one-line choice with three ways back. It let me change the most important part of the app without betting a release on it.
+
+<Muted>
+  Workout Director is published on the App Store by Shelgaon Ltd. [App
+  Store](https://apps.apple.com/gb/app/workout-director-gym-home/id6813645709)
+</Muted>

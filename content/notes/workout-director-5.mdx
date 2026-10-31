@@ -1,0 +1,91 @@
+---
+title: Counting out loud, one line per rep
+date: '2026-10-31'
+series: How Workout Director is built
+part: 5
+listLabel: Workout Director, part 5
+description: 'Workout Director, part 5: the fixed rule behind what the voice says on each counted rep, why the lines are bundled audio clips rather than live text-to-speech, and how the count behaves around Siri, phone calls and the live coach.'
+---
+
+{/* AI disclosure: the coach clips are AI-generated (a text-to-speech model). Keep that sentence in the body. */}
+
+When Workout Director counts a rep with the camera, it says the number out loud. Most reps get just the number. A few get a short phrase. This note covers the rule behind those phrases, why they are recorded clips, and the cases where the voice should stay quiet. It is about the count's own voice. The optional live coach, which talks with you and can change the workout, is a separate system and gets its own part later in the series; [part 1](/notes/workout-director-1/) gives the outline.
+
+## The problem
+
+During a set, people are looking at the floor, the bar or the wall, not the phone. The count has to reach them by sound. But a voice that says too much is worse than none: it talks over music, over a phone call, over the optional live coach. Each line had to be short, predictable and correct for the set's target.
+
+## The rule
+
+The wording comes from one pure function. For a set with a target:
+
+```text
+target − 1                         "N. Last one."
+target                             "N. Done."
+target − 3, sets of 6 or more      "N. Three more!"
+half of an even target, 8 or more  "N. Halfway there!"
+past the target                    just the number
+the same number again              nothing
+a one-rep set                      "1. Done."
+```
+
+For a set of 10 that gives: "1", "2", "3", "4", "5. Halfway there!", "6", "7. Three more!", "8", "9. Last one.", "10. Done."
+
+For a set of 7, there is no halfway line, because 7 is odd. You hear "4. Three more!", "6. Last one." and "7. Done."
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-pushup-coach-lines',
+      width: 720,
+      height: 900,
+      alt: "A frame from a stock clip of a man doing push-ups on a blue mat. Below it, a chart of his right elbow angle over 12 seconds, with dashed lines at 147 degrees (rest) and 115 degrees (work) and red lines at the seven counted reps, numbered 1 to 7. Under the chart, the coach's lines in order: 1, 2, 3, \"4. Three more!\", 5, \"6. Last one.\" and \"7. Done.\"",
+    },
+  ]}
+  caption={"Elbow angle from a stock push-up clip (Pexels) using MediaPipe pose, with the app's push-up lines. The seven counts come from a copy of the app's rep logic run on the clip, spaced 1.47 to 1.57 seconds apart. The lines are what the app's rule says for a target of 7."}
+/>
+
+## Clips, not live speech
+
+Every line is a short audio clip bundled in the app as `coach_<key>.m4a`. There are clips for the numbers 1 to 50, the rep phrases, the partial-rep cues ("Go a bit lower.") and the framing hints ("Step back", "Turn sideways"). A longer line is built by joining clips: "9. Last one." plays `n9` and then `last_one`.
+
+**The clips are AI-generated.** They were made once with a text-to-speech model and are shipped as files. Nothing is generated during a workout. The source comment gives the reason: the workout should never sound like the phone's built-in text-to-speech voice. A unit test walks through every line the app can say and fails if any of them has no clip.
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-voice-coach-poster',
+      width: 720,
+      height: 900,
+      alt: "The Workout Director live screen redrawn over a stock push-up clip: a landscape phone shows the count at 7 out of 7 and a pill reading \"7. Done.\"",
+    },
+  ]}
+  caption={"A poster frame from the clip in the LinkedIn post (stock footage from Pexels, live screen redrawn, count from a copy of the app's rep logic, AI-generated coach voice). Video file: `posts/post-4/wd-voice-coach.mp4` with captions in `wd-voice-coach.srt`."}
+/>
+
+## When to stay quiet
+
+iOS tells an app what kind of spoken prompt is appropriate right now, through `AVAudioSession.promptStyle`:
+
+- **Siri is listening** (`.none`): the count says nothing.
+- **A phone call is active** (`.short`): the count becomes a short chime.
+- **Otherwise**: the full line.
+
+People can also switch counts to haptics or silent in Preferences, or say "mute the counts" to the live coach. Since 1.0.55 that choice sticks for later workouts.
+
+## Bugs that shaped it
+
+**A cue that repeated on every dropout.** If the camera lost sight of the person, the app used to say so every time tracking dropped. In a set with someone moving in and out of frame, that meant the same line again and again. Since 1.0.32 the line is spoken at most once per set. The framing pill on screen does the rest, and the count is left alone.
+
+**Clips cutting the coach off.** Until a change on 22 October 2026, a count clip could cut into the live coach's call. Now the count clips duck under the coach instead. The live count still goes to the coach as text, so it knows the number without anyone saying it twice.
+
+## Tradeoffs
+
+- **A fixed voice can't adapt its wording.** The clips say exactly what was recorded. That is the point: the count has to be the same every time. The live coach covers anything that needs real sentences.
+- **New phrases need new clips.** Adding a line means generating a clip, and the test makes sure that never gets forgotten.
+- **Disclosure matters.** Because the voice is AI-generated, I say so wherever it is used, including in this note and in the clip.
+
+<Muted>
+  Workout Director is published on the App Store by Shelgaon Ltd. [App
+  Store](https://apps.apple.com/gb/app/workout-director-gym-home/id6813645709)
+</Muted>

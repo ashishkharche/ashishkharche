@@ -1,0 +1,106 @@
+---
+title: Most of a rep counter is the reps it doesn't count
+date: '2026-10-31'
+series: How Workout Director is built
+part: 4
+listLabel: Workout Director, part 4
+description: "Workout Director, part 4: the rep counter is a small state machine on one angle. Most of the work is in what it refuses: movement that isn't the exercise, reps that aren't deep enough, and a calibration that once made the next rep harder."
+---
+
+{/* The two-rep check section is in hold/two-rep-section.md. Add it after "Movement that isn't the exercise" once version 1.0.87 or later is live on the App Store (the App Store showed 1.0.86 on 31 Oct 2026). */}
+
+[Part 1](/notes/workout-director-1/) said that most of the work in counting reps is not counting the things that are not reps. This note is that work in detail. [Part 3](/notes/workout-director-3/) ended with one steady joint angle per frame. Here is how that angle becomes a count, and the three kinds of movement the counter has to refuse: movement that isn't the exercise, reps that don't go deep enough, and noise.
+
+## The problem
+
+A counter that misses reps is annoying. A counter that adds reps is worse, because people stop trusting the number. And a counter that only says "no" is frustrating: if someone does ten squats and the count says eight, they need to know which two didn't count and what to change, at the moment it happens.
+
+## Two lines on one angle
+
+Each move is defined by one joint angle and two lines on it. For a squat, the knee:
+
+```text
+squat (knee)      rest 155°   work 110°   floor 125°
+lunge (knee)      rest 155°   work 110°   floor 125°
+push-up (elbow)   rest 147°   work 115°   floor 130°
+deadlift (hip)    rest 160°   work 125°
+bridge (hip)      rest 140°   work 165°   (an extension: the angle opens)
+```
+
+The counter is a small state machine: waiting, then rest, then work, then back to rest. Crossing the work line moves it to work, and coming back past the rest line counts the rep, if the range, duration and spacing checks pass.
+
+## Movement that isn't the exercise
+
+The counter on its own counts anything that crosses the lines. Plenty of everyday movement bends the knee like a squat: bending down to pick up a dumbbell, sitting on a bench between sets, walking back into frame.
+
+On 28 October 2026 I changed the counter so a rep also has to look like the move in the three seconds before it. Legs moving together and feet planted. The hips going down for a squat. The torso travelling for a hinge. Hands planted below the shoulders for a push-up. In the replayed public clips, walking, marching and high knees then counted nothing. That removed a whole class of false reps. It doesn't remove the single dip that really does look like a squat, because that dip passes every posture check.
+
+## Reps that are not deep enough
+
+### What a partial is
+
+A partial is a rep that goes at least 70% of the way from the rest line to the work line, never crosses the work line, and comes back. For a squat, 70% of the way from 155° to 110° is about 124°. So a dip to 120° is a partial. A dip to 140° is just movement, and the app ignores it.
+
+<ThemedFigures
+  images={[
+    {
+      name: 'wd-depth-check',
+      width: 720,
+      height: 900,
+      alt: "Top: a Workout Director set summary captured in the simulator, showing \"Set 1 of 4, Goblet squat\", 10 of 10 reps, 16 kg, a strip of rep tiles with one outlined, and the line \"1 rep didn't count. Go a bit lower.\" Bottom: a chart of the right knee angle in a stock squat clip with dashed lines at 155 degrees (rest), about 124 degrees (70%) and 110 degrees (work), and red lines at each of the four counted reps.",
+    },
+  ]}
+  caption={"Top: a simulator capture of the set summary in a 1.0.91 development build with a demo set. Bottom: knee angle from a stock squat clip (Pexels) using MediaPipe pose, with the app's lines. Every rep in this clip was deep, around 73\u201379\u00b0, so none of them falls in the partial band."}
+/>
+
+When a partial happens, the count stays where it was. In spoken mode, the app plays a short two-pulse tone and says one line. In haptics mode it plays the tone only. Both give a warning tap. In silent mode it does nothing.
+
+### What it says
+
+The line depends on the joint and the direction of the move:
+
+- **Squat, lunge (knee):** "Go a bit lower."
+- **Push-up and other moves where the elbow bends downward:** "Go a bit lower."
+- **Deadlift, other hinges (hip):** "Hinge a bit lower."
+- **Bridge, hip thrust (hip extension):** "Lift a bit higher."
+- **Overhead or bench press (elbow extension):** "Press a bit higher."
+- **Pull-up (elbow pull):** "Pull a bit higher."
+- **Curl:** "Curl a bit more."
+- **Row:** "Pull a bit further."
+- **Moves tracked by height or distance:** "Go a bit lower."
+
+The source carries the rule at the top of that function: "Depth and range only. No injury, pain, or medical language." The app sees an angle, not a body, and the words should claim no more than that.
+
+### Not nagging
+
+A bounce at the bottom of a rep can produce two partials in a second. So the same cue stays quiet for 3 seconds after it plays. With the live coach on, the third partial in a set is the one that becomes a form line from the coach, rather than a comment on every rep.
+
+After the set, the summary says how many partial reps didn't count and repeats the same line underneath, so the advice afterwards matches what was said during the set.
+
+## The bug: a deep first rep made the next one harder
+
+The lines adapt to you. After the first counted rep, the app personalises the work line to your range, so someone with limited mobility isn't asked for depth they can't reach. That adaptation has two limits. It is never easier than the floor (125° for a squat), and it is never stricter than the spec.
+
+The second limit came from a bug I fixed on 21 October 2026. A deep first rep made the next work line stricter than the spec, so later reps had to go deeper than the move asks for. Calibration was punishing the person for doing the first rep well. Now the personalised line can only move between the floor and the spec.
+
+## Other checks before a rep counts
+
+- **Range.** The trip from top to bottom has to clear a minimum, so jitter around one line never counts.
+- **Duration and spacing.** A rep that is too quick, or too soon after the last one, is refused.
+- **Glitches.** Before any of this, a single frame that jumps more than 60° is dropped unless the next frame agrees ([part 3](/notes/workout-director-3/)).
+
+## Turning it off without a release
+
+Changes to these rules are the riskiest changes I make, because a wrong count is the first thing a user notices. As part 1 says, they ship behind feature flags that can be turned off from the server, so a bad change doesn't have to wait for a new build to get through App Review.
+
+## Tradeoffs
+
+- **One angle can't judge form.** The app can say a squat was shallow. It can't say your knees caved in. That is why the cues are only about depth and range.
+- **Fixed lines suit most people, not everyone.** The floor protects people with less range. The spec cap stops calibration drifting the other way.
+- **Posture checks need a look-back.** A rep is judged on the three seconds before it, so the counter has to keep that much recent pose history for every move.
+- **The 70% band is a tradeoff.** A lower band would catch more half-reps but also flag ordinary movement between reps. A higher band would miss real partials.
+
+<Muted>
+  Workout Director is published on the App Store by Shelgaon Ltd. [App
+  Store](https://apps.apple.com/gb/app/workout-director-gym-home/id6813645709)
+</Muted>
