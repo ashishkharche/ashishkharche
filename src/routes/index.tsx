@@ -14,7 +14,7 @@ import { notes, noteSummary } from '~/content/notes'
 import { site } from '~/content/site'
 import { formatShortDate } from '~/lib/dates'
 import { seo } from '~/lib/seo'
-import { personJsonLd } from '~/lib/structuredData'
+import { homeJsonLd, jsonLdScript } from '~/lib/structuredData'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
@@ -34,7 +34,7 @@ export const Route = createFileRoute('/')({
     meta: homeSeo.meta,
     // React preloads the hero's first phone itself (it has fetchPriority="high").
     links: homeSeo.links,
-    scripts: [{ type: 'application/ld+json', children: JSON.stringify(personJsonLd) }],
+    scripts: [jsonLdScript(homeJsonLd)],
   }),
   component: Home,
 })

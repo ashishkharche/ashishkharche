@@ -11,3 +11,13 @@ declare module '*.mdx' {
   export const frontmatter: Record<string, unknown>
   export default function MDXContent(props: MDXProps): JSX.Element
 }
+
+declare module 'virtual:content-dates' {
+  const dates: {
+    /** Last-modified date (YYYY-MM-DD) of each sitemap page. */
+    pages: Record<string, string>
+    /** Published and last-updated dates of each note, by slug. */
+    notes: Record<string, { published: string; updated: string }>
+  }
+  export default dates
+}

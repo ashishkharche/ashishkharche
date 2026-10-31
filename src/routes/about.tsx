@@ -7,11 +7,15 @@ import { PageHead } from '~/components/PageHead'
 import { Lead, Prose, mdxComponents } from '~/components/Prose'
 import { site } from '~/content/site'
 import { seo } from '~/lib/seo'
+import { aboutJsonLd, jsonLdScript } from '~/lib/structuredData'
+import dates from 'virtual:content-dates'
 import { ui } from '~/styles/ui'
 
 export const Route = createFileRoute('/about')({
-  head: () =>
-    seo({ path: '/about/', title: 'About', description: 'About Ashish Kharche, a software engineer in London.' }),
+  head: () => ({
+    ...seo({ path: '/about/', title: 'About', description: 'About Ashish Kharche, a software engineer in London.' }),
+    scripts: [jsonLdScript(aboutJsonLd(dates.pages['/about/']))],
+  }),
   component: About,
 })
 

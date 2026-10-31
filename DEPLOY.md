@@ -13,7 +13,8 @@ pnpm lighthouse   # optional; needs Chrome (set CHROME_PATH if it is not found)
 
 `pnpm build` runs `vite build` and then `scripts/postbuild.ts`, which:
 
-- writes `dist/client/sitemap.xml` (set `SITE_LASTMOD=YYYY-MM-DD` to pin the date; it defaults to today),
+- writes `dist/client/sitemap.xml`, with each page's `lastmod` taken from its content date or the last git commit that touched its source files (never the build time),
+- writes the Atom feed of the notes to `dist/client/feed.xml`,
 - adds a per-page Content-Security-Policy meta tag with the hashes of that page's inline scripts,
 - copies the headers from `vercel.json` into `dist/client/vercel.json` (without the build settings),
 - fails the build if a page has an inline style, a banned word (see `src/content/rules.ts`), or a sitemap page is missing.

@@ -5,6 +5,7 @@ import { NotFound } from '~/components/NotFound'
 import { SiteFooter } from '~/components/SiteFooter'
 import { SiteHeader } from '~/components/SiteHeader'
 import { site } from '~/content/site'
+import { feedPath, feedTitle } from '~/lib/feed'
 import { themeScript } from '~/lib/theme'
 import globalCss from '~/styles/global.css?url'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
@@ -22,6 +23,7 @@ export const Route = createRootRoute({
       { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
       { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
       { rel: 'manifest', href: '/site.webmanifest' },
+      { rel: 'alternate', type: 'application/atom+xml', title: feedTitle, href: feedPath },
       {
         rel: 'preload',
         href: '/assets/fonts/Geist-Latin.woff2',

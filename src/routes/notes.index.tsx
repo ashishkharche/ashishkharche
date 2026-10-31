@@ -5,6 +5,7 @@ import { PageHead } from '~/components/PageHead'
 import { Rows, type Row } from '~/components/Rows'
 import { comingNotes, notes } from '~/content/notes'
 import { formatShortDate } from '~/lib/dates'
+import { feedPath } from '~/lib/feed'
 import { seo } from '~/lib/seo'
 import { ui } from '~/styles/ui'
 
@@ -42,6 +43,13 @@ function Notes() {
           </h2>
           <p {...stylex.props(ui.muted, styles.sub)}>A series on the iPhone app and its backend.</p>
           <Rows rows={rows} />
+          <p {...stylex.props(ui.muted, styles.feed)}>
+            New notes are also in the{' '}
+            <a href={feedPath} type="application/atom+xml" {...stylex.props(ui.link)}>
+              Atom feed
+            </a>
+            .
+          </p>
         </section>
       </div>
     </Main>
@@ -50,4 +58,5 @@ function Notes() {
 
 const styles = stylex.create({
   sub: { marginTop: '0.3rem', marginBottom: '1rem' },
+  feed: { marginTop: '2rem', fontSize: '1rem' },
 })

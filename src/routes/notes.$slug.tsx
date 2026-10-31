@@ -10,6 +10,8 @@ import { getNoteBody } from '~/content/noteBodies'
 import { getNote } from '~/content/notes'
 import { formatLongDate } from '~/lib/dates'
 import { seo } from '~/lib/seo'
+import { jsonLdScript, noteJsonLd } from '~/lib/structuredData'
+import dates from 'virtual:content-dates'
 import { colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
@@ -21,13 +23,16 @@ export const Route = createFileRoute('/notes/$slug')({
   },
   head: ({ loaderData }) =>
     loaderData
-      ? seo({
-          path: loaderData.path,
-          title: loaderData.title,
-          description: loaderData.description,
-          type: 'article',
-          image: noteOgImage(loaderData.slug),
-        })
+      ? {
+          ...seo({
+            path: loaderData.path,
+            title: loaderData.title,
+            description: loaderData.description,
+            type: 'article',
+            image: noteOgImage(loaderData.slug),
+          }),
+          scripts: [jsonLdScript(noteJsonLd(loaderData, dates.notes[loaderData.slug]?.updated))],
+        }
       : {},
   component: NotePage,
 })

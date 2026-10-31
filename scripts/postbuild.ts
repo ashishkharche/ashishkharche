@@ -3,8 +3,11 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { findBanned, loadLocalTerms, localTermsFile } from '../src/content/rules.ts'
+import { readFrontmatter } from '../plugins/content.ts'
 import { site, sitemapPaths } from '../src/content/site.ts'
+import { contentDates, noteDates } from '../src/lib/contentDates.ts'
 import { withPolicy } from '../src/lib/csp.ts'
+import { buildAtomFeed, feedPath, type FeedEntry } from '../src/lib/feed.ts'
 import { checkPreviewTags, pngSize } from '../src/lib/preview.ts'
 import { buildSitemap } from '../src/lib/sitemap.ts'
 
@@ -61,8 +64,34 @@ for (const name of (await readdir(publicDir)).filter((n) => n.endsWith('.pdf')))
   if (!source.equals(built)) problems.push(`${name} in the output differs from public/${name}`)
 }
 
-const lastmod = process.env.SITE_LASTMOD ?? new Date().toISOString().slice(0, 10)
+// Each page's lastmod comes from its content date or git history, not from the build time.
+const root = new URL('../', import.meta.url).pathname
+const lastmod = contentDates(root)
 await writeFile(join(out, 'sitemap.xml'), buildSitemap(lastmod))
+
+// Atom feed of the notes, linked from every page head and from the Notes page.
+const noteFiles = (await readdir(join(root, 'content/notes'))).filter((name) => name.endsWith('.mdx'))
+const entries: FeedEntry[] = await Promise.all(
+  noteFiles.map(async (name) => {
+    const slug = name.slice(0, -4)
+    const frontmatter = readFrontmatter(await readFile(join(root, 'content/notes', name), 'utf8'))
+    const { published, updated } = noteDates(slug, root)
+    return {
+      title: String(frontmatter.title),
+      summary: String(frontmatter.description),
+      path: `/notes/${slug}/`,
+      published,
+      updated,
+    }
+  }),
+)
+const feed = buildAtomFeed(entries)
+for (const hit of findBanned(feed)) problems.push(`${feedPath}: ${hit}`)
+for (const entry of entries) {
+  if (!sitemapPaths.includes(entry.path as (typeof sitemapPaths)[number]))
+    problems.push(`${entry.path} is in the feed but not the sitemap`)
+}
+await writeFile(join(out, feedPath.slice(1)), feed)
 
 // For a static upload the output folder needs the headers, but not the build settings.
 const config = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8')) as Record<string, unknown>
@@ -77,4 +106,4 @@ if (problems.length > 0) {
   console.error(`Post-build checks failed:\n- ${problems.join('\n- ')}`)
   process.exit(1)
 }
-console.log(`Post-build: ${pages.length} pages checked, CSP added, sitemap.xml and vercel.json written.`)
+console.log(`Post-build: ${pages.length} pages checked, CSP added, sitemap.xml, feed.xml and vercel.json written.`)

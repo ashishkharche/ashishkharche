@@ -7,6 +7,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 import { mdxFrontmatter, pele } from './plugins/content.ts'
+import { datesPlugin } from './plugins/dates.ts'
 import { rehypeHighlight } from './plugins/highlight.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
@@ -21,6 +22,7 @@ export default defineConfig(({ command }) => ({
   plugins: [
     pele(),
     mdxFrontmatter(),
+    datesPlugin(),
     {
       enforce: 'pre',
       ...mdx({
