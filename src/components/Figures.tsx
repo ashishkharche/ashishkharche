@@ -78,7 +78,7 @@ const styles = stylex.create({
     borderBlockWidth: '1px',
     borderBlockStyle: 'solid',
     borderBlockColor: colors.line,
-    maxWidth: layout.column,
+    maxWidth: layout.columnWide,
   },
   term: { color: colors.muted, fontSize: '0.95rem' },
   detail: { marginTop: '0.15rem', fontSize: '1rem' },

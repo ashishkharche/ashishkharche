@@ -98,9 +98,9 @@ export const fonts = stylex.defineConsts({
 
 export const layout = stylex.defineConsts({
   wide: '1040px',
-  // About 65 characters of body text per line.
-  column: '33rem',
-  // For pages with a date column beside the text, such as Work, so the text keeps a similar measure.
+  // About 72 characters of body text per line.
+  column: '36rem',
+  // For pages with a date column beside the text, such as Work, and the case study details row.
   columnWide: '46rem',
   gutter: '2.5rem',
 })

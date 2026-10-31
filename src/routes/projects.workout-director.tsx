@@ -63,7 +63,8 @@ function WorkoutDirector() {
           label="Workout Director App Store screens on iPad and iPhone"
         />
       </div>
-      <div {...stylex.props(ui.column)}>
+      {/* The details row gets the wider column so each item fits on one or two lines. */}
+      <div {...stylex.props(ui.columnWide)}>
         <Facts
           items={[
             { term: 'My part', detail: 'SwiftUI app, TypeScript backend, releases' },
@@ -85,6 +86,8 @@ function WorkoutDirector() {
             },
           ]}
         />
+      </div>
+      <div {...stylex.props(ui.column)}>
         <div {...stylex.props(ui.section)}>
           <Prose data-reveal="">
             <CaseStudy components={{ ...mdxComponents, Diagram, Shots, Muted, Gallery: ScreensGallery }} />
