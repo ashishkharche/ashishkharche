@@ -29,6 +29,14 @@ export const Route = createRootRoute({
         type: 'font/woff2',
         crossOrigin: 'anonymous',
       },
+      // The serif is only used for headings, and the page title is above the fold.
+      {
+        rel: 'preload',
+        href: '/assets/fonts/GeistSerif-Latin.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
       { rel: 'stylesheet', href: globalCss },
     ],
     scripts: [{ children: themeScript }],
@@ -52,7 +60,7 @@ function RootDocument({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
         {/* Written here because head() keeps only one meta tag per name. */}
-        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#faf8f3" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0c0d0e" media="(prefers-color-scheme: dark)" />
       </head>
       <body {...stylex.props(styles.body)}>
@@ -71,6 +79,8 @@ function RootDocument({ children }: { children: ReactNode }) {
 const styles = stylex.create({
   body: {
     backgroundColor: colors.bg,
+    backgroundImage: colors.grain,
+    backgroundRepeat: 'repeat',
     color: colors.text,
     colorScheme: colors.scheme,
     fontFamily: fonts.sans,

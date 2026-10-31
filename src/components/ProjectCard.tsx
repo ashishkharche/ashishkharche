@@ -1,9 +1,10 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { Logo } from './Logo'
+import { Scramble } from './Scramble'
 import { DeviceStage } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
-import { breakpoints, colors } from '~/styles/tokens.stylex'
+import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 
 interface Props {
   card: Card
@@ -23,7 +24,7 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
   const linkProps = stylex.props(styles.link)
   const label = (
     <>
-      {card.title}{' '}
+      <Scramble>{card.title}</Scramble>{' '}
       <span aria-hidden="true" {...stylex.props(styles.arrow)}>
         {card.external ? '↗' : '→'}
       </span>
@@ -109,10 +110,11 @@ const styles = stylex.create({
   },
   head: { display: 'flex', alignItems: 'flex-start', gap: '1rem' },
   title: {
-    fontSize: 'clamp(1.45rem, 3vw, 1.9rem)',
-    fontWeight: 600,
-    lineHeight: 1.2,
-    letterSpacing: '-0.015em',
+    fontFamily: fonts.serif,
+    fontSize: 'clamp(1.7rem, 3.4vw, 2.2rem)',
+    fontWeight: 400,
+    lineHeight: 1.15,
+    letterSpacing: '-0.01em',
   },
   link: {
     color: { default: colors.text, [stylex.when.ancestor(':hover')]: colors.accent },
@@ -125,7 +127,8 @@ const styles = stylex.create({
       inset: 0,
     },
   },
-  arrow: { display: 'inline-block' },
+  // Geist Serif has no diagonal arrow, so the arrows use the body font.
+  arrow: { display: 'inline-block', fontFamily: fonts.sans, fontSize: '0.8em' },
   meta: { marginTop: '0.4rem', fontSize: '0.95rem', color: colors.muted },
   text: { fontSize: 'clamp(1.05rem, 1.8vw, 1.2rem)', lineHeight: 1.55, color: colors.muted, maxWidth: '34em' },
 })

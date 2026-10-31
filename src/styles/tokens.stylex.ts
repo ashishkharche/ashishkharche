@@ -7,7 +7,12 @@ const DARK = '@media (prefers-color-scheme: dark)'
  * themes below override them when someone picks a theme with the toggle.
  */
 export const colors = stylex.defineVars({
-  bg: { default: '#ffffff', [DARK]: '#0c0d0e' },
+  bg: { default: '#faf8f3', [DARK]: '#0c0d0e' },
+  // A very light paper grain tiled over the background (a static SVG, drawn once).
+  grain: { default: 'url("/assets/img/grain.svg")', [DARK]: 'url("/assets/img/grain-dark.svg")' },
+  // The footer drawing is black line art; dark mode turns it light.
+  artFilter: { default: 'none', [DARK]: 'invert(1)' },
+  artOpacity: { default: '0.42', [DARK]: '0.3' },
   text: { default: '#090a0b', [DARK]: '#f1f6f3' },
   muted: { default: '#4d5755', [DARK]: '#a9b2bc' },
   line: { default: '#d9e1dd', [DARK]: '#262a2d' },
@@ -34,7 +39,10 @@ export const colors = stylex.defineVars({
 })
 
 const light = {
-  bg: '#ffffff',
+  bg: '#faf8f3',
+  grain: 'url("/assets/img/grain.svg")',
+  artFilter: 'none',
+  artOpacity: '0.42',
   text: '#090a0b',
   muted: '#4d5755',
   line: '#d9e1dd',
@@ -56,6 +64,9 @@ const light = {
 
 const dark = {
   bg: '#0c0d0e',
+  grain: 'url("/assets/img/grain-dark.svg")',
+  artFilter: 'invert(1)',
+  artOpacity: '0.3',
   text: '#f1f6f3',
   muted: '#a9b2bc',
   line: '#262a2d',
@@ -78,9 +89,14 @@ const dark = {
 export const lightTheme = stylex.createTheme(colors, light)
 export const darkTheme = stylex.createTheme(colors, dark)
 
+// Body and code fonts. Geist and Geist Mono are also bundled: to try that pairing, set sans to
+// 'Geist, "Geist Fallback", ui-sans-serif, system-ui, sans-serif' and mono to '"Geist Mono", ui-monospace, monospace',
+// and preload Geist-Latin.woff2 instead of Inter-Latin.woff2 in src/routes/__root.tsx.
 export const fonts = stylex.defineConsts({
   sans: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+  // Display headings. Geist Serif has one weight, so headings set in it use 400.
+  serif: '"Geist Serif", "Geist Serif Fallback", ui-serif, Georgia, serif',
 })
 
 export const layout = stylex.defineConsts({

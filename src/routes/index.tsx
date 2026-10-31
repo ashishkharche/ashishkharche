@@ -6,6 +6,7 @@ import { Main } from '~/components/Main'
 import { PhoneRow, type PhoneShot } from '~/components/PhoneRow'
 import { ProjectCard } from '~/components/ProjectCard'
 import { Rows } from '~/components/Rows'
+import { Scramble } from '~/components/Scramble'
 import { SectionHead } from '~/components/SectionHead'
 import { kaloCard, workoutDirectorCard } from '~/content/projects'
 import { notes, noteSummary } from '~/content/notes'
@@ -13,7 +14,7 @@ import { site } from '~/content/site'
 import { formatShortDate } from '~/lib/dates'
 import { seo } from '~/lib/seo'
 import { personJsonLd } from '~/lib/structuredData'
-import { breakpoints, colors } from '~/styles/tokens.stylex'
+import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 const heroShots: [PhoneShot, PhoneShot, PhoneShot] = [
@@ -68,16 +69,16 @@ function Home() {
             </p>
             <p {...stylex.props(styles.links)}>
               <Link to="/work/" {...stylex.props(ui.link)}>
-                Work history
+                <Scramble>Work history</Scramble>
               </Link>
               <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
-                Email
+                <Scramble>Email</Scramble>
               </a>
               <a href={site.linkedin} {...stylex.props(ui.link)}>
-                LinkedIn
+                <Scramble>LinkedIn</Scramble>
               </a>
               <a href={site.github} {...stylex.props(ui.link)}>
-                GitHub
+                <Scramble>GitHub</Scramble>
               </a>
             </p>
           </div>
@@ -136,11 +137,12 @@ const styles = stylex.create({
   },
   intro: {},
   title: {
-    fontSize: 'clamp(2.2rem, 5.4vw, 3.4rem)',
-    lineHeight: 1.08,
+    fontFamily: fonts.serif,
+    fontSize: 'clamp(2.5rem, 6vw, 3.9rem)',
+    lineHeight: 1.05,
     textWrap: 'balance',
-    fontWeight: 600,
-    letterSpacing: '-0.025em',
+    fontWeight: 400,
+    letterSpacing: '-0.015em',
   },
   lead: {
     marginTop: '1.1rem',

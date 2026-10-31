@@ -10,7 +10,7 @@ import { getNoteBody } from '~/content/noteBodies'
 import { getNote } from '~/content/notes'
 import { formatLongDate } from '~/lib/dates'
 import { seo } from '~/lib/seo'
-import { colors } from '~/styles/tokens.stylex'
+import { colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
 export const Route = createFileRoute('/notes/$slug')({
@@ -73,11 +73,12 @@ const styles = stylex.create({
   meta: { color: colors.muted, fontSize: '1rem' },
   title: {
     marginTop: '0.6rem',
-    fontSize: 'clamp(1.9rem, 4.6vw, 2.5rem)',
-    lineHeight: 1.15,
+    fontFamily: fonts.serif,
+    fontSize: 'clamp(2.15rem, 5.2vw, 2.95rem)',
+    lineHeight: 1.1,
     textWrap: 'balance',
-    fontWeight: 600,
-    letterSpacing: '-0.02em',
+    fontWeight: 400,
+    letterSpacing: '-0.012em',
   },
   body: { marginTop: '2rem' },
 })

@@ -67,7 +67,7 @@ const styles = stylex.create({
   lead: { fontSize: '1.25rem', lineHeight: 1.55 },
   h2: {
     marginTop: { default: '3rem', ':first-child': 0 },
-    fontSize: '1.45rem',
+    fontSize: '1.8rem',
   },
   h3: { marginTop: { default: '2rem', ':first-child': 0 } },
   list: { paddingLeft: '1.25rem' },

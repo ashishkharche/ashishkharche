@@ -86,7 +86,7 @@ function WorkoutDirector() {
           ]}
         />
         <div {...stylex.props(ui.section)}>
-          <Prose>
+          <Prose data-reveal="">
             <CaseStudy components={{ ...mdxComponents, Diagram, Shots, Muted, Gallery: ScreensGallery }} />
           </Prose>
         </div>

@@ -10,6 +10,51 @@
   font-display: swap;
 }
 
+/*
+  Geist Serif for display headings, with Geist and Geist Mono as an optional
+  body and code pairing (tokens.stylex.ts picks which). All three are Latin
+  subsets under the SIL Open Font License (public/assets/fonts/Geist-OFL.txt).
+  The fallback faces are local fonts scaled to Geist's metrics, so the swap
+  from fallback to web font does not move the text.
+*/
+@font-face {
+  font-family: 'Geist Serif';
+  src: url('/assets/fonts/GeistSerif-Latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Serif Fallback';
+  src: local('Times New Roman'), local('Liberation Serif'), local('Times');
+  size-adjust: 114.1%;
+  ascent-override: 88.08%;
+  descent-override: 25.86%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist';
+  src: url('/assets/fonts/Geist-Latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica');
+  size-adjust: 105.32%;
+  ascent-override: 95.43%;
+  descent-override: 28.01%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/assets/fonts/GeistMono-Latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* The reset sits in a layer that comes before StyleX's layers, so component styles always win. */
 @layer reset {
   *,

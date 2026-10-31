@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
-import { breakpoints, colors, layout } from './tokens.stylex'
+import { breakpoints, colors, fonts, layout } from './tokens.stylex'
 
 const focusRing = {
   outline: { default: null, ':focus-visible': `2px solid ${colors.accent}` },
@@ -56,9 +56,10 @@ export const ui = stylex.create({
     marginTop: { default: '4.5rem', [breakpoints.phone]: '3.5rem' },
   },
   h2: {
-    fontSize: '1.35rem',
-    fontWeight: 600,
-    lineHeight: 1.3,
+    fontFamily: fonts.serif,
+    fontSize: '1.7rem',
+    fontWeight: 400,
+    lineHeight: 1.2,
     letterSpacing: '-0.005em',
     textWrap: 'balance',
   },

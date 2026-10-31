@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
+import { fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 import { Main } from './Main'
 
@@ -22,5 +23,5 @@ export function NotFound() {
 }
 
 const styles = stylex.create({
-  title: { fontSize: '1.8rem', fontWeight: 600 },
+  title: { fontFamily: fonts.serif, fontSize: '2.2rem', fontWeight: 400, lineHeight: 1.15 },
 })
