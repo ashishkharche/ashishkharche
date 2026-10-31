@@ -14,6 +14,7 @@ Checked against the official docs and npm on 30 October 2026.
 | Interactive parts | Base UI (theme toggle)                                                                                                        | `@base-ui/react` 1.9                                           |
 | Long-form content | MDX files in `content/`, with YAML frontmatter for notes                                                                      | `@mdx-js/rollup` 3.1                                           |
 | Diagrams          | Mermaid sources rendered to SVG at build time with Pele                                                                       | `pele` 1.12                                                    |
+| Code highlighting | Shiki through `@shikijs/rehype`, at build time, tokens written as classes                                                     | `shiki` 4.5, `@shikijs/rehype` 4.5                             |
 | Language          | TypeScript, strict (`strict`, `noUncheckedIndexedAccess`)                                                                     | TypeScript 7 for `tsc`, TypeScript 6 API for typescript-eslint |
 | Package manager   | pnpm                                                                                                                          | 10.34                                                          |
 | Checks            | ESLint (typescript-eslint, StyleX, jsx-a11y, React Hooks), Prettier, Vitest, Playwright with axe-core, linkinator, Lighthouse |                                                                |
@@ -49,6 +50,13 @@ screenshot rows and the gallery. A small Vite plugin (`plugins/content.ts`) lets
 the previous site (root `style` removed, `rx` attributes instead of inline styles, `role="img"` and a `<title>`), and its colours come
 from the StyleX tokens, so diagrams follow light and dark mode. The SVG markup is byte-for-byte the same as the old site's.
 
+**Shiki.** Fenced code blocks in MDX are highlighted at build time by Shiki (`@shikijs/rehype`, added as a rehype plugin to
+the MDX compiler), so no highlighter ships to the browser. It uses the same TextMate grammars as VS Code, which gives accurate
+Python, Swift and JSON. Shiki normally writes inline `style` attributes on every token, which the `style-src 'self'` policy would
+block, so `plugins/highlight.ts` uses a CSS variables theme and turns each token's style into a class (`tok-keyword`,
+`tok-string`, ...). The colours for those classes are in `src/styles/global.css`, with light and dark values. Each block shows its
+language and, once the page has hydrated, a small copy button. Pele only renders Mermaid diagrams, so it has no part in this.
+
 ## Compromises
 
 - **Client JavaScript.** The previous site had a few lines of JS. This one hydrates React and the router: about 110 KB compressed on
@@ -79,4 +87,6 @@ from the StyleX tokens, so diagrams follow light and dark mode. The SVG markup i
 - Base UI releases (v1.9.0): https://base-ui.com/react/overview/releases
 - `@base-ui/react` on npm: https://www.npmjs.com/package/@base-ui/react
 - Pele: https://pele.run and https://github.com/obsidianmd/pele
+- Shiki rehype plugin: https://shiki.style/packages/rehype
+- Shiki CSS variables theme: https://shiki.style/guide/theme-colors
 - MDX with Rollup and Vite: https://mdxjs.com/packages/rollup/

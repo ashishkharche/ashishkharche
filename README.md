@@ -31,6 +31,7 @@ content/
   notes/*.mdx           notes, one file each, with YAML frontmatter
   projects/*.mdx        case study text
 plugins/content.ts      Vite plugin: .mmd imports and MDX frontmatter imports
+plugins/highlight.ts    Shiki setup for fenced code blocks (languages, token classes)
 public/                 favicons, robots.txt, web manifest, fonts, screenshots, social image
 scripts/                post-build step, local server, link check, Lighthouse, screenshots, deploy manifest
 src/
@@ -48,7 +49,8 @@ tests/e2e               Playwright
 Create `content/notes/<slug>.mdx` with frontmatter (`title`, `date` as YYYY-MM-DD, `series`, `part`, `listLabel`,
 `description`), add `/notes/<slug>/` to `sitemapPaths` in `src/content/site.ts`, and remove its title from `comingNotes` in
 `src/content/notes.ts` if it was listed there. Diagrams: add a `.mmd` file to `content/diagrams`, import it in the MDX file and
-use `<Diagram diagram={…} title="…" caption="…" />`.
+use `<Diagram diagram={…} title="…" caption="…" />`. Code: use fenced blocks with a language tag (` ```python `);
+the language has to be listed in `plugins/highlight.ts`.
 
 ## Content rules
 

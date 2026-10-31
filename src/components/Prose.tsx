@@ -2,6 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import type { MDXComponents } from 'mdx/types'
 import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import { CodeBlock } from '~/components/CodeBlock'
 import { colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
@@ -50,12 +51,10 @@ export const mdxComponents: MDXComponents = {
   ul: ({ children }) => <ul {...stylex.props(styles.block, styles.list)}>{children}</ul>,
   ol: ({ children }) => <ol {...stylex.props(styles.block, styles.list)}>{children}</ol>,
   li: ({ children }) => <li {...stylex.props(styles.item)}>{children}</li>,
-  code: ({ children }) => <code {...stylex.props(styles.code)}>{children}</code>,
-  pre: ({ children }) => (
-    <pre tabIndex={0} {...stylex.props(styles.block, styles.pre, ui.focusRing)}>
-      {children}
-    </pre>
-  ),
+  // Inline `code` gets the chip style. Code inside a fenced block is marked by Shiki and left plain.
+  code: ({ children, ...rest }: ComponentPropsWithoutRef<'code'> & { 'data-language'?: string }) =>
+    rest['data-language'] ? <code>{children}</code> : <code {...stylex.props(styles.code)}>{children}</code>,
+  pre: CodeBlock,
 }
 
 const styles = stylex.create({
@@ -77,23 +76,13 @@ const styles = stylex.create({
   code: {
     fontFamily: fonts.mono,
     fontSize: '0.86em',
-    backgroundColor: colors.soft,
+    backgroundColor: colors.codeBg,
     borderWidth: '1px',
     borderStyle: 'solid',
-    borderColor: colors.line,
+    borderColor: colors.codeLine,
+    overflowWrap: 'break-word',
     paddingBlock: '0.05em',
     paddingInline: '0.35em',
     borderRadius: '5px',
-  },
-  pre: {
-    overflowX: 'auto',
-    paddingBlock: '0.25rem',
-    paddingLeft: '1.1rem',
-    borderLeftWidth: '2px',
-    borderLeftStyle: 'solid',
-    borderLeftColor: colors.accentLine,
-    fontFamily: fonts.mono,
-    fontSize: '0.9rem',
-    lineHeight: 1.55,
   },
 })

@@ -79,3 +79,81 @@ svg.pele {
     zoom: 0.75;
   }
 }
+
+/*
+  Code: Shiki highlights fenced blocks at build time (plugins/highlight.ts)
+  and marks each token with a tok-* class. The colours are set here so they
+  follow the system setting and the theme toggle (data-theme on <html>).
+*/
+:root {
+  --code-keyword: #6f42c1;
+  --code-string: #0a3069;
+  --code-constant: #0550ae;
+  --code-function: #953800;
+  --code-parameter: #24292f;
+  --code-comment: #57606a;
+  --code-link: #0550ae;
+  --code-punctuation: #424a53;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --code-keyword: #d2a8ff;
+    --code-string: #a5d6ff;
+    --code-constant: #79c0ff;
+    --code-function: #ffa657;
+    --code-parameter: #e6edf3;
+    --code-comment: #8b949e;
+    --code-link: #79c0ff;
+    --code-punctuation: #c9d1d9;
+  }
+}
+:root[data-theme='dark'] {
+  --code-keyword: #d2a8ff;
+  --code-string: #a5d6ff;
+  --code-constant: #79c0ff;
+  --code-function: #ffa657;
+  --code-parameter: #e6edf3;
+  --code-comment: #8b949e;
+  --code-link: #79c0ff;
+  --code-punctuation: #c9d1d9;
+}
+pre.code code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  font: inherit;
+}
+.tok-keyword {
+  color: var(--code-keyword);
+}
+.tok-string,
+.tok-string-expression {
+  color: var(--code-string);
+}
+.tok-constant {
+  color: var(--code-constant);
+}
+.tok-function {
+  color: var(--code-function);
+}
+.tok-parameter {
+  color: var(--code-parameter);
+}
+.tok-comment {
+  color: var(--code-comment);
+}
+.tok-punctuation {
+  color: var(--code-punctuation);
+}
+.tok-link {
+  color: var(--code-link);
+}
+.tok-italic {
+  font-style: italic;
+}
+.tok-bold {
+  font-weight: 600;
+}
+.tok-underline {
+  text-decoration: underline;
+}

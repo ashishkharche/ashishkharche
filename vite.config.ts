@@ -7,6 +7,7 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import { defineConfig } from 'vite'
 import { fileURLToPath } from 'node:url'
 import { mdxFrontmatter, pele } from './plugins/content.ts'
+import { rehypeHighlight } from './plugins/highlight.ts'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
 
@@ -24,6 +25,7 @@ export default defineConfig(({ command }) => ({
       enforce: 'pre',
       ...mdx({
         remarkPlugins: [remarkFrontmatter, [remarkMdxFrontmatter, { name: 'frontmatter' }]],
+        rehypePlugins: [[...rehypeHighlight]],
         providerImportSource: undefined,
       }),
     },
