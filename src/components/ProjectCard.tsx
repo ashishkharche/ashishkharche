@@ -1,7 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { Logo } from './Logo'
-import { Scramble } from './Scramble'
 import { DeviceStage } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
@@ -25,7 +24,7 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
   const linkProps = stylex.props(styles.link)
   const label = (
     <>
-      <Scramble>{card.title}</Scramble>{' '}
+      {card.title}{' '}
       <span aria-hidden="true" {...stylex.props(styles.arrow)}>
         {card.external ? '↗' : '→'}
       </span>

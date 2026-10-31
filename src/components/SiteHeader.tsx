@@ -5,7 +5,6 @@ import { sectionFor } from '~/lib/urls'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 import { Brand } from './Brand'
-import { Scramble } from './Scramble'
 import { ThemeToggle } from './ThemeToggle'
 
 export function SiteHeader() {
@@ -31,7 +30,7 @@ export function SiteHeader() {
                     aria-current={active ? 'page' : undefined}
                     {...stylex.props(ui.focusRing, styles.navLink, active && styles.active)}
                   >
-                    <Scramble>{item.label}</Scramble>
+                    {item.label}
                   </Link>
                 </li>
               )

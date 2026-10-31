@@ -1,7 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { ui } from '~/styles/ui'
-import { Scramble } from './Scramble'
 
 export function SectionHead({
   id,
@@ -20,7 +19,7 @@ export function SectionHead({
         {title}
       </h2>
       <Link to={to} {...stylex.props(ui.link, ui.quietLink, ui.small)}>
-        <Scramble>{linkLabel}</Scramble>
+        {linkLabel}
       </Link>
     </div>
   )

@@ -2,7 +2,6 @@ import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
-import { Scramble } from './Scramble'
 
 export interface Row {
   title: string
@@ -21,11 +20,11 @@ export function Rows({ rows, spaced = false }: { rows: Row[]; spaced?: boolean }
             <span {...stylex.props(ui.muted)}>{row.title}</span>
           ) : row.href.startsWith('/') ? (
             <Link to={row.href} {...stylex.props(ui.link)}>
-              <Scramble>{row.title}</Scramble>
+              {row.title}
             </Link>
           ) : (
             <a href={row.href} {...stylex.props(ui.link)}>
-              <Scramble>{row.title}</Scramble>
+              {row.title}
             </a>
           )}
           <span {...stylex.props(styles.date)}>{row.date}</span>

@@ -2,7 +2,6 @@ import * as stylex from '@stylexjs/stylex'
 import { site } from '~/content/site'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
-import { Scramble } from './Scramble'
 
 export function SiteFooter() {
   const year = new Date().getFullYear()
@@ -15,17 +14,17 @@ export function SiteFooter() {
         <ul role="list" aria-label="Elsewhere" {...stylex.props(styles.list)}>
           <li>
             <a href={`mailto:${site.email}`} {...stylex.props(ui.link, ui.quietLink)}>
-              <Scramble>Email</Scramble>
+              Email
             </a>
           </li>
           <li>
             <a href={site.linkedin} {...stylex.props(ui.link, ui.quietLink)}>
-              <Scramble>LinkedIn</Scramble>
+              LinkedIn
             </a>
           </li>
           <li>
             <a href={site.github} {...stylex.props(ui.link, ui.quietLink)}>
-              <Scramble>GitHub</Scramble>
+              GitHub
             </a>
           </li>
         </ul>

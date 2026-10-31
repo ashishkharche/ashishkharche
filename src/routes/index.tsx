@@ -6,7 +6,6 @@ import { Main } from '~/components/Main'
 import { PhoneRow } from '~/components/PhoneRow'
 import { ProjectCard } from '~/components/ProjectCard'
 import { Rows } from '~/components/Rows'
-import { Scramble } from '~/components/Scramble'
 import { SectionHead } from '~/components/SectionHead'
 import { kaloCard, workoutDirectorCard } from '~/content/projects'
 import type { ScreenId } from '~/content/workoutDirectorScreens'
@@ -66,16 +65,16 @@ function Home() {
             </p>
             <p {...stylex.props(styles.links)}>
               <Link to="/work/" {...stylex.props(ui.link)}>
-                <Scramble>Work history</Scramble>
+                Work history
               </Link>
               <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
-                <Scramble>Email</Scramble>
+                Email
               </a>
               <a href={site.linkedin} {...stylex.props(ui.link)}>
-                <Scramble>LinkedIn</Scramble>
+                LinkedIn
               </a>
               <a href={site.github} {...stylex.props(ui.link)}>
-                <Scramble>GitHub</Scramble>
+                GitHub
               </a>
             </p>
           </div>
