@@ -10,6 +10,7 @@ export function NotFound() {
       {/* Rendered here rather than in a route head() so unknown URLs get them too; React puts them in <head>. */}
       <title>Page not found · Ashish Kharche</title>
       <meta name="robots" content="noindex" />
+      <meta name="description" content="Page not found." />
       <div {...stylex.props(ui.column)}>
         <h1 {...stylex.props(styles.title)}>Page not found.</h1>
         <p {...stylex.props(ui.mt1)}>

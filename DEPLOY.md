@@ -40,6 +40,8 @@ Upload the contents of `dist/client` as they are, with no build step on Vercel.
 
 `dist/client/vercel.json` is part of the upload and carries the headers (security headers, `frame-ancestors`, long caching for
 fonts and hashed JS/CSS) and `"trailingSlash": true`, which redirects `/work` to `/work/`. `404.html` is served for unknown paths.
+It is rendered at build time from a path no route matches (see `src/server.ts`), so it hydrates the same way in the
+browser on any unknown URL.
 `dist/server` is a by-product of the build and is not deployed.
 
 ## Option B: Vercel builds from GitHub (`ashishkharche/ashishkharche`)

@@ -45,7 +45,14 @@ export default defineConfig(({ command }) => ({
         // Files from public/ (the CV PDFs) are linked from pages; crawling them would overwrite them with text.
         filter: ({ path }) => !/\.[a-z0-9]+$/i.test(path.split(/[?#]/)[0] ?? ''),
       },
-      pages: [{ path: '/404', prerender: { enabled: true, outputPath: '/404.html' } }],
+      // No route matches this path, so it renders the same not found page the browser renders for unknown URLs.
+      // The header makes src/server.ts answer 200 so the page is saved.
+      pages: [
+        {
+          path: '/404',
+          prerender: { enabled: true, outputPath: '/404.html', headers: { 'x-prerender-not-found': '1' } },
+        },
+      ],
     }),
     viteReact({ include: /\.(mdx|jsx|tsx)$/ }),
   ],
