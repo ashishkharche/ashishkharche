@@ -1,10 +1,10 @@
 import * as stylex from '@stylexjs/stylex'
 import { createFileRoute } from '@tanstack/react-router'
+import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
 import { Rows } from '~/components/Rows'
-import { site } from '~/content/site'
 import { certificationsNote, maestroArticles, roles, tools, workIntro } from '~/content/work'
 import { seo } from '~/lib/seo'
 import { breakpoints, colors } from '~/styles/tokens.stylex'
@@ -93,13 +93,7 @@ function Work() {
           <h2 id="cv-title" {...stylex.props(ui.h2, styles.h2)}>
             CV
           </h2>
-          <p {...stylex.props(ui.mt06)}>
-            CV available on request:{' '}
-            <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
-              email me
-            </a>
-            .
-          </p>
+          <Availability />
         </section>
       </div>
     </Main>

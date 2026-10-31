@@ -54,6 +54,13 @@ for (const path of sitemapPaths) {
 }
 if (!pages.some((page) => relative(out, page) === '404.html')) problems.push('404.html was not prerendered')
 
+// Files copied from public/ must reach the output byte for byte (the CV PDFs are linked from pages).
+const publicDir = new URL('../public/', import.meta.url).pathname
+for (const name of (await readdir(publicDir)).filter((n) => n.endsWith('.pdf'))) {
+  const [source, built] = await Promise.all([readFile(join(publicDir, name)), readFile(join(out, name))])
+  if (!source.equals(built)) problems.push(`${name} in the output differs from public/${name}`)
+}
+
 const lastmod = process.env.SITE_LASTMOD ?? new Date().toISOString().slice(0, 10)
 await writeFile(join(out, 'sitemap.xml'), buildSitemap(lastmod))
 

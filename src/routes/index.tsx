@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
 import { PhoneRow } from '~/components/PhoneRow'
@@ -61,7 +62,7 @@ function Home() {
             <p {...stylex.props(styles.sub)}>
               From 2022 to 2026 I worked at <Logo name="paythru" size={20} inline />
               Paythru on payment apps for EV charging, and in 2026 I worked on its new payments platform on AWS. I've
-              also done QA on the Grok iOS and web apps at <Logo name="spacexsi" size={20} inline />
+              also done part-time QA on the Grok iOS and web apps at <Logo name="spacexsi" size={20} inline />
               SpaceX Super Intelligence. I'm looking for a full-time role in the UK in mobile, full-stack, cloud or AI
               engineering.
             </p>
@@ -116,8 +117,9 @@ function Home() {
               <a href={site.github} {...stylex.props(ui.link)}>
                 GitHub
               </a>
-              . My CV is available on request.
+              .
             </p>
+            <Availability email={false} />
           </section>
         </div>
       </div>

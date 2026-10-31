@@ -21,7 +21,8 @@ describe('content rules', () => {
     expect(findBanned('worked at xAI', [])).not.toEqual([])
     expect(findBanned('SpaceXSI (formerly xAI)', [])).toEqual([])
     expect(findBanned('cut costs by 20%', [])).not.toEqual([])
-    expect(findBanned('a part-time role', [])).not.toEqual([])
+    expect(findBanned('call +44 1234 567890', [])).not.toEqual([])
+    expect(findBanned('date of birth', [])).not.toEqual([])
     expect(findBanned('published on the App Store', [])).toEqual([])
   })
 
@@ -34,10 +35,11 @@ describe('content rules', () => {
     expect(findBanned(readFileSync(file, 'utf8'))).toEqual([])
   })
 
-  it('keeps the SpaceXSI role without dates', async () => {
+  it('shows the SpaceXSI role as part-time, Jan 2026 to Oct 2026', async () => {
     const { roles } = await import('~/content/work')
     const role = roles.find((r) => r.org.includes('SpaceXSI'))
-    expect(role?.when).toBeUndefined()
+    expect(role?.when).toBe('Jan 2026 to Oct 2026')
+    expect(role?.role).toMatch(/part-time/)
   })
 
   const localTerms = loadLocalTerms()

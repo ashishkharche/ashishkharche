@@ -42,6 +42,8 @@ export default defineConfig(({ command }) => ({
         crawlLinks: true,
         autoSubfolderIndex: true,
         failOnError: true,
+        // Files from public/ (the CV PDFs) are linked from pages; crawling them would overwrite them with text.
+        filter: ({ path }) => !/\.[a-z0-9]+$/i.test(path.split(/[?#]/)[0] ?? ''),
       },
       pages: [{ path: '/404', prerender: { enabled: true, outputPath: '/404.html' } }],
     }),

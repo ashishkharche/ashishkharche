@@ -24,16 +24,17 @@ export const roles: Role[] = [
     ],
   },
   {
+    when: 'Jan 2026 to Oct 2026',
     org: 'SpaceX Super Intelligence (SpaceXSI)',
     logo: 'spacexsi',
     orgNote: '(formerly xAI)',
-    role: 'Quality Assurance Engineer',
+    role: 'Quality Assurance Engineer, part-time',
     paragraphs: [
       'I worked on QA for the Grok iOS and web apps, covering chat, payments, subscriptions and sign-in, and tracked bugs in Linear with the engineers through to release.',
     ],
   },
   {
-    when: '2023 to 2024',
+    when: 'Mar 2023 to Sep 2024',
     org: 'Maestro',
     logo: 'maestro',
     role: 'Developer, contract, alongside Paythru',

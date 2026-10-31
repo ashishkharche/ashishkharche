@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
@@ -57,6 +58,7 @@ function About() {
               </a>
               .
             </P>
+            <Availability email={false} />
           </Prose>
         </div>
       </div>

@@ -10,7 +10,6 @@ export const bannedPatterns: Array<{ pattern: RegExp; reason: string }> = [
   { pattern: /openai/i, reason: 'model providers are not named' },
   { pattern: /stripe/i, reason: 'not used' },
   { pattern: /\b20\s?%/, reason: 'no percentage claims' },
-  { pattern: /part[- ]time/i, reason: 'roles are not described as part-time' },
   { pattern: /\+44|\b07\d{3}\s?\d{6}\b/, reason: 'no phone numbers' },
   { pattern: /date of birth|\bDOB\b/i, reason: 'no date of birth' },
 ]
