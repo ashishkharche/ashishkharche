@@ -26,9 +26,10 @@ Upload the contents of `dist/client` as they are, with no build step on Vercel.
 
 1. `pnpm build && pnpm deploy:manifest`. This writes `dist/deploy-manifest.json`: every file under `dist/client` with its path,
    SHA-1 and size (about 70 files, 1.7 MB).
-2. Upload each file with the Vercel connector's `upload_file` (body: the file's bytes base64-encoded; `xVercelDigest`: its SHA-1;
-   `contentLength`: its size). Files Vercel already has are skipped by digest.
-3. Call `create_deployment` for project `ashishkharche`, scoped to the Vercel team that owns it, with:
+2. Upload each file through the Vercel REST API (`POST /v2/files`), sending the file's bytes with its SHA-1 in the
+   `x-vercel-digest` header and its size as the content length. Files Vercel already has are skipped by digest.
+3. Create a deployment through the Vercel REST API (`POST /v13/deployments`) for project `ashishkharche`, scoped to the
+   Vercel team that owns it, with:
    - `files`: the manifest entries (`{ "file": "work/index.html", "sha": "…", "size": … }`),
    - `projectSettings`: `{ "framework": null, "buildCommand": "", "installCommand": "", "outputDirectory": null }`.
      The empty build and install commands tell Vercel to skip both steps and serve the files exactly as uploaded. Leaving
