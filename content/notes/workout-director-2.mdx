@@ -36,14 +36,14 @@ This note covers how that works: where the body comes from, how a pose is writte
 
 The open exercise drawings I could find didn't fit. The best-known set of line drawings is licensed CC BY-SA, so anything adapted from it would have to carry the same licence. Stock illustration sets don't share one style or one body, and they rarely have a matching start and end pose for the same move.
 
-I wanted one consistent figure across every move, light and dark versions, and a licence that was clean all the way down. So the rule became: build the figure from openly licensed parts, and use images of real people only to measure poses, never to trace, texture or publish.
+I wanted one consistent figure across every move, light and dark versions, and a licence that was clean all the way down. So the rule became: build the figure from openly licensed parts, and use photos only to measure poses.
 
 ## The pieces
 
 - **The body.** The base mesh, the 163-bone default rig and the shape targets come from MakeHuman's MPFB2 assets, which are CC0. The script builds the body directly from those files, so no Blender add-on is needed. Targets push it towards an athletic build, and corrective shape keys keep elbows and knees from collapsing when they bend.
 - **Clothes.** Shorts, a tee or tank and trainers are real cut geometry, so hems and collars draw as clean lines instead of texture.
 - **Equipment.** Dumbbells, barbells and plates, kettlebells, benches and machines are built in code at real-world sizes.
-- **Reference images.** Photos from free-exercise-db (public domain, under the Unlicense) show the start and end of each move. Where a photo was a front view or didn't show good form, I also checked against frames from exercise demo videos. Those frames were used only for checking. They are not in the app, the repo or this note.
+- **Reference images.** Photos from free-exercise-db (public domain, under the Unlicense) show the start and end of each move. Where a photo was a front view or didn't show good form, I also compared the pose with frames from exercise demo videos, and only the measurements went into the checks.
 - **Rendering.** Blender 4.2 in the background, Cycles on the CPU with flat emission shading, and Freestyle for the lines. Each still takes a few seconds.
 
 <Diagram
@@ -281,7 +281,7 @@ A figure is used only for the exact move it shows. A dumbbell curl figure isn't 
 
 ## What I would do the same way again
 
-- **Keep the licence clean from the start.** A CC0 body, reference images used only for measuring, and our own renders in the app. It made the question "can we ship this?" easy to answer for every image.
+- **Keep the licence clean from the start.** A CC0 body, reference images used only for measuring, and my own renders in the app. It made the question "can I ship this?" easy to answer for every image.
 - **Pose with directions, and judge with angles.** Specs written as bone directions are easy to read and to fix one bone at a time. Joint angles measured from references are easy to compare. Keeping the two apart meant a figure was never a copy of one image.
 - **Write the checks before trusting the renders.** Most of the problems they caught were ones I wouldn't have noticed on a phone screen until a user did.
 

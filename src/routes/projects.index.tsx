@@ -28,7 +28,7 @@ function Projects() {
   return (
     <Main>
       <div {...stylex.props(ui.wrap)}>
-        <PageHead title="Projects" lead="Apps I built outside work." />
+        <PageHead title="Projects" lead="iPhone apps I built and ship on the App Store." />
         <div {...stylex.props(styles.grid, ui.section)}>
           <ProjectCard card={workoutDirectorCard} headingLevel="h2" priority />
           <ProjectCard card={kaloCard} headingLevel="h2" />

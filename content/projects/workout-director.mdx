@@ -4,7 +4,7 @@ import liveCoach from '../diagrams/04-live-coach-connect.mmd'
 import releaseFlow from '../diagrams/07-release-flow.mmd'
 import forcedUpdate from '../diagrams/08-forced-update.mmd'
 
-I built Workout Director. It is published on the App Store by Shelgaon Ltd. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases. This was work I did before my role at Paythru ended in October 2026.
+I built Workout Director. It is published on the App Store by Shelgaon Ltd. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases. It has been on the App Store since October 2026.
 
 ## The problem
 
@@ -19,13 +19,13 @@ Training on your own, you either count reps in your head or stop to tap a phone.
 
 ## Counting reps on the device
 
-Pose tracking runs on the phone with Google MediaPipe, and a rep counter sits on top of the pose stream. It covers squats, lunges, push-ups, presses, rows, curls, pull-ups, deadlifts, hip thrusts and glute bridges. Planks and other holds are timed sets instead.
+Pose tracking runs on the phone with Google MediaPipe, and a rep counter sits on top of the pose stream. It counts squats, push-ups and more from the camera. Planks and other holds are timed sets instead.
 
 Most of the work was not counting things that aren't reps: half reps, walking, standing up and getting into position. Around the counter, the app gets the person in frame first with a short countdown and prompts such as Move back or Step into frame, and it always leaves a manual path: minus and plus are one tap away, and you can correct the count by voice.
 
 <Shots
-  screens={['01-rep-counting', '03-live-coach', '04-manual']}
-  caption="Counting a goblet squat set, the voice coach before push-ups, and typing in reps without the camera. App Store screenshots."
+  screens={['02-voice', '04-manual', '07-progress']}
+  caption="The camera counting a push-up set, with examples of what you can say to the coach; typing in reps without the camera; and the workout summary afterwards. App Store screenshots."
 />
 
 ## A voice coach that asks before it acts

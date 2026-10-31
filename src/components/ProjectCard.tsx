@@ -16,8 +16,9 @@ interface Props {
 /**
  * A project shown as its screenshots, large on the page, with the title and
  * summary underneath: either three phone screens in a row or, for a project
- * with a stage, an iPad and two iPhones layered on a soft panel. Projects after
- * the first get a thin rule above.
+ * with a stage, an iPad and two iPhones layered on a soft panel. A project
+ * with neither shows only its title and summary. Projects after the first get
+ * a thin rule above.
  */
 export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Props) {
   const Heading = headingLevel
@@ -34,7 +35,7 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
     <article {...stylex.props(stylex.defaultMarker(), styles.project)}>
       {card.stage ? (
         <DeviceStage ipad={card.stage.ipad} phones={card.stage.phones} priority={priority} />
-      ) : (
+      ) : card.shots?.length ? (
         <div {...stylex.props(styles.media)}>
           {(card.shots ?? []).map((shot, index) => (
             <img
@@ -52,8 +53,8 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
             />
           ))}
         </div>
-      )}
-      <div {...stylex.props(styles.body)}>
+      ) : null}
+      <div {...stylex.props(styles.body, !card.stage && !card.shots?.length && styles.bodyOnly)}>
         <div {...stylex.props(styles.head)}>
           <Logo name={card.logo} size={40} />
           <div>
@@ -108,6 +109,8 @@ const styles = stylex.create({
     alignItems: 'baseline',
     marginTop: { default: '2.5rem', [breakpoints.tablet]: '1.75rem' },
   },
+  // A project shown without screens: just the title and summary under the rule.
+  bodyOnly: { marginTop: 0 },
   head: { display: 'flex', alignItems: 'flex-start', gap: '1rem' },
   title: {
     fontFamily: fonts.serif,

@@ -16,11 +16,11 @@ export const defaultOgImage: OgImage = {
 export const ogImages = {
   projects: {
     src: '/assets/og/projects.png',
-    alt: 'Projects by Ashish Kharche: Workout Director and Kalo, with a screen from each app.',
+    alt: 'Projects by Ashish Kharche: Workout Director and Kalo, with a Workout Director screen of a push-up set counted on the live camera.',
   },
   workoutDirector: {
     src: '/assets/og/workout-director.png',
-    alt: 'Workout Director case study, with App Store screens for rep counting and progress.',
+    alt: 'Workout Director case study, with App Store screens for a counted push-up set and progress.',
   },
 } satisfies Record<string, OgImage>
 

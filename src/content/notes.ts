@@ -62,7 +62,7 @@ export function getNote(slug: string): Note | undefined {
 export const comingNotes = [
   'Choosing a pose model for the phone',
   "Most of a rep counter is the reps it doesn't count",
-  'Training a small rep checker on public video',
+  'Testing counting changes before they ship',
   'A voice coach that asks before it acts',
   'A small TypeScript backend on AWS Lambda',
   'Shipping without breaking old phones',

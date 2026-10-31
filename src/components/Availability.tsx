@@ -3,13 +3,25 @@ import { links, site } from '~/content/site'
 import { colors } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
-/** Short availability note with the phone-free CV downloads. Used on the home, work and about pages. */
+/** Short contact note with the phone-free CV downloads. Used on the home, work and about pages. */
 export function Availability({ email = true }: { email?: boolean }) {
   return (
     <div {...stylex.props(styles.box)}>
       <p>
-        <strong {...stylex.props(styles.strong)}>Available now</strong> for roles in London. I&apos;m on a UK Skilled
-        Worker visa, so a new employer would need to sponsor me.
+        <strong {...stylex.props(styles.strong)}>Based in London.</strong> The best way to reach me is{' '}
+        {email ? (
+          <>
+            email:{' '}
+            <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
+              {site.email}
+            </a>
+          </>
+        ) : (
+          <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
+            email
+          </a>
+        )}
+        .
       </p>
       <p {...stylex.props(ui.mt06)}>
         <a href={links.cv} type="application/pdf" {...stylex.props(ui.link)}>
@@ -20,16 +32,6 @@ export function Availability({ email = true }: { email?: boolean }) {
           iOS version (PDF)
         </a>
         .
-        {email ? (
-          <>
-            {' '}
-            The best way to reach me is email:{' '}
-            <a href={`mailto:${site.email}`} {...stylex.props(ui.link)}>
-              {site.email}
-            </a>
-            .
-          </>
-        ) : null}
       </p>
     </div>
   )

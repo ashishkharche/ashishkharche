@@ -37,7 +37,7 @@ function About() {
               page.
             </P>
             <P>
-              Outside work I built the iPhone apps <Logo name="workoutDirector" size={20} inline />
+              I also built and ship two iPhone apps, <Logo name="workoutDirector" size={20} inline />
               Workout Director and <Logo name="kalo" size={20} inline />
               Kalo. Both are published on the App Store by Shelgaon Ltd.
             </P>

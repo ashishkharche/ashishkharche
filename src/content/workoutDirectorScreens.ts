@@ -24,6 +24,8 @@ export interface Screen {
   label: string
   /** What the screen shows, used as alt text. The headline on the screen comes first. */
   alt: string
+  /** The camera view shows licensed stock footage (Mixkit) played into the app, so it carries a credit. */
+  footage?: boolean
 }
 
 const allScreens = {
@@ -31,16 +33,19 @@ const allScreens = {
     id: '01-rep-counting',
     label: 'Rep counting',
     alt: 'Every rep, counted for you. A goblet squat set on camera, with the count at 2 of 10, set 1 of 4, at 16 kg.',
+    footage: true,
   },
   '02-voice': {
     id: '02-voice',
     label: 'Voice',
-    alt: 'Hands busy? Just say it. Spoken requests such as "Add a set" over a bench press set at 2 of 6.',
+    alt: 'Hands busy? Just say it. A man doing push-ups on a balcony, counted on the live camera at 4 of 12, with example requests such as "Add a set" and "Give me 30 seconds".',
+    footage: true,
   },
   '03-live-coach': {
     id: '03-live-coach',
     label: 'Live Coach',
-    alt: 'A coach in your corner. The voice coach tells you to brace your core before push-ups, with the count at 7 of 12.',
+    alt: 'A coach in your corner. A man doing push-ups on the live camera, counted at 7 of 12, while the voice coach tells him to brace his core.',
+    footage: true,
   },
   '04-manual': {
     id: '04-manual',
@@ -72,12 +77,14 @@ const allScreens = {
 export type ScreenId = keyof typeof allScreens
 
 /**
- * The screens shown on the site, in App Store order. 02-voice is left out for
- * now; to show it, add '02-voice' after '01-rep-counting' and run `pnpm wd-screens`.
+ * The screens shown on the site. The push-up sets on the live camera (02, then
+ * 03) lead, then the rest in App Store order. After changing the list, run
+ * `pnpm wd-screens <folder>` to make the web copies.
  */
 export const shownScreenIds: ScreenId[] = [
-  '01-rep-counting',
+  '02-voice',
   '03-live-coach',
+  '01-rep-counting',
   '04-manual',
   '05-form',
   '06-trainer',
@@ -86,6 +93,14 @@ export const shownScreenIds: ScreenId[] = [
 ]
 
 export const screens: Screen[] = shownScreenIds.map((id) => allScreens[id])
+
+/** Credit for the stock footage in the camera screens. Mixkit asks for, but does not require, a credit. */
+export const footageCredit = 'Footage: Mixkit, free licence.'
+
+/** Whether any of these screens shows stock footage, so the credit should be shown with them. */
+export function hasFootage(ids: readonly ScreenId[]): boolean {
+  return ids.some((id) => Boolean((allScreens[id] as Screen).footage))
+}
 
 export function screen(id: ScreenId): Screen {
   if (!shownScreenIds.includes(id)) throw new Error(`Screen ${id} is not in shownScreenIds`)

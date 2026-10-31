@@ -3,12 +3,13 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
-import { PhoneRow, type PhoneShot } from '~/components/PhoneRow'
+import { PhoneRow } from '~/components/PhoneRow'
 import { ProjectCard } from '~/components/ProjectCard'
 import { Rows } from '~/components/Rows'
 import { Scramble } from '~/components/Scramble'
 import { SectionHead } from '~/components/SectionHead'
 import { kaloCard, workoutDirectorCard } from '~/content/projects'
+import type { ScreenId } from '~/content/workoutDirectorScreens'
 import { notes, noteSummary } from '~/content/notes'
 import { site } from '~/content/site'
 import { formatShortDate } from '~/lib/dates'
@@ -17,12 +18,9 @@ import { personJsonLd } from '~/lib/structuredData'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 import { ui } from '~/styles/ui'
 
-const heroShots: [PhoneShot, PhoneShot, PhoneShot] = [
-  { kalo: 'kalo-2-photo' },
-  { workoutDirector: '01-rep-counting' },
-  { workoutDirector: '07-progress' },
-]
-const heroSizes = '(max-width: 760px) 31vw, 170px'
+// All three from the dark Workout Director set, so the row never mixes light and dark screens.
+const heroShots: [ScreenId, ScreenId, ScreenId] = ['02-voice', '06-trainer', '07-progress']
+const heroSizes = '(max-width: 640px) min(62vw, 250px), (max-width: 760px) 31vw, 170px'
 
 const homeSeo = seo({
   path: '/',
@@ -34,7 +32,7 @@ const homeSeo = seo({
 export const Route = createFileRoute('/')({
   head: () => ({
     meta: homeSeo.meta,
-    // React preloads the hero's middle phone itself (it has fetchPriority="high").
+    // React preloads the hero's first phone itself (it has fetchPriority="high").
     links: homeSeo.links,
     scripts: [{ type: 'application/ld+json', children: JSON.stringify(personJsonLd) }],
   }),
@@ -62,10 +60,9 @@ function Home() {
             </p>
             <p {...stylex.props(styles.sub)}>
               From 2022 to 2026 I worked at <Logo name="paythru" size={20} inline />
-              Paythru on payment apps for EV charging, and in 2026 I worked on its new payments platform on AWS. I've
-              also done part-time QA on the Grok iOS and web apps at <Logo name="spacexsi" size={20} inline />
-              SpaceX Super Intelligence. I'm looking for a full-time role in the UK in mobile, full-stack, cloud or AI
-              engineering.
+              Paythru on payment apps for EV charging, and in 2026 I worked on its new payments platform on AWS. I also
+              did part-time QA at <Logo name="spacexsi" size={20} inline />
+              SpaceX Super Intelligence.
             </p>
             <p {...stylex.props(styles.links)}>
               <Link to="/work/" {...stylex.props(ui.link)}>
@@ -82,7 +79,7 @@ function Home() {
               </a>
             </p>
           </div>
-          <PhoneRow shots={heroShots} sizes={heroSizes} />
+          <PhoneRow shots={heroShots} sizes={heroSizes} label="Workout Director app screens" />
         </section>
 
         <section aria-labelledby="sel-title" {...stylex.props(ui.section, styles.selected)}>
@@ -133,7 +130,7 @@ const styles = stylex.create({
     display: 'grid',
     gridTemplateColumns: { default: '1fr 1fr', [breakpoints.tablet]: '1fr' },
     alignItems: 'center',
-    gap: { default: '3rem', [breakpoints.tablet]: '2.5rem' },
+    gap: { default: '4rem', [breakpoints.tablet]: '3rem' },
   },
   intro: {},
   title: {
@@ -159,7 +156,8 @@ const styles = stylex.create({
     columnGap: '1.25rem',
     fontSize: '1rem',
   },
-  selected: {},
+  // More room between the hero screens and the next heading.
+  selected: { marginTop: { default: '7rem', [breakpoints.tablet]: '5.5rem', [breakpoints.phone]: '4.5rem' } },
   grid: {
     display: 'grid',
     gridTemplateColumns: '1fr',

@@ -37,11 +37,11 @@ export const workoutDirectorCard: ProjectCard = {
     'An iPhone and iPad training app that counts reps with the front camera, on the device, while a voice coach talks you through the workout.',
   meta: 'SwiftUI · TypeScript on AWS Lambda · Case study',
   logo: 'workoutDirector',
-  stage: { ipad: '05-form', phones: ['03-live-coach', '08-today'] },
+  stage: { ipad: '05-form', phones: ['02-voice', '08-today'] },
 }
 
 /** The screens at the top of the case study. */
-export const workoutDirectorHero: StageSpec = { ipad: '01-rep-counting', phones: ['03-live-coach', '07-progress'] }
+export const workoutDirectorHero: StageSpec = { ipad: '02-voice', phones: ['05-form', '07-progress'] }
 
 export const kaloCard: ProjectCard = {
   title: 'Kalo',
@@ -51,11 +51,7 @@ export const kaloCard: ProjectCard = {
     'A macro and calorie tracker for iPhone with photo, voice and barcode logging, HealthKit, widgets and a share extension.',
   meta: 'SwiftUI · App Store',
   logo: 'kalo',
-  shots: [
-    { name: 'kalo-2-photo', alt: 'Kalo showing macros for a photographed meal' },
-    { name: 'kalo-3-camera', alt: 'Kalo pointing the camera at a plate of pasta' },
-    { name: 'kalo-5-meals', alt: 'Kalo listing the day’s logged meals' },
-  ],
+  // No screenshots: Kalo's App Store screens are light, and the site keeps every row of screens in one dark style.
 }
 
 export const projectCards = [workoutDirectorCard, kaloCard]

@@ -10,7 +10,7 @@ description: 'Workout Director, part 1: the camera feed never leaves the iPhone.
 import onDevice from '../diagrams/01-on-device-boundary.mmd'
 import systemOverview from '../diagrams/02-system-overview.mmd'
 
-Workout Director is an iPhone and iPad training app that I built. It is published on the App Store by Shelgaon Ltd as "Workout Director – Gym & Home". You prop the phone up and press Start; the front camera counts your reps and a voice coach talks you through the session. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases.
+Workout Director is an iPhone and iPad training app that I built. It is published on the App Store by Shelgaon Ltd as "Workout Director: Gym & Home". You prop the phone up and press Start; the front camera counts your reps and a voice coach talks you through the session. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases.
 
 This is the first of a few notes on how it is built. I am starting with the decision that shaped most of the others: the camera feed stays on the phone. Video is never recorded, saved or uploaded.
 
@@ -18,7 +18,7 @@ This is the first of a few notes on how it is built. I am starting with the deci
 
 A rep counter that streams video to a server would be easier in some ways. You could run bigger models and fix counting bugs in one place. But it would mean sending footage of someone's body, often filmed at home, to a server, and every rep would depend on the network.
 
-Keeping the camera local gave us a privacy promise we could state plainly in the App Store listing. It also forced a clear split. The phone owns everything that has to happen in real time: pose tracking, counting, timers and cues. The network is only used for things that can tolerate a delay: syncing the log, the trainer chat, and the voice coach's speech.
+Keeping the camera local gave me a privacy promise I could state plainly in the App Store listing. It also forced a clear split. The phone owns everything that has to happen in real time: pose tracking, counting, timers and cues. The network is only used for things that can tolerate a delay: syncing the log, the trainer chat, and the voice coach's speech.
 
 <Diagram
   diagram={onDevice}
@@ -30,12 +30,12 @@ Keeping the camera local gave us a privacy promise we could state plainly in the
 ## What runs on the phone
 
 <Shots
-  screens={['01-rep-counting', '03-live-coach', '04-manual']}
-  caption="Live Coach counting a goblet squat set, the voice coach before push-ups, and typing in reps without the camera. App Store screenshots."
+  screens={['02-voice', '04-manual', '07-progress']}
+  caption="The camera counting a push-up set, with examples of what you can say to the coach; typing in reps without the camera; and the workout summary afterwards. App Store screenshots."
 />
 
 - **Pose tracking.** Google MediaPipe runs on the device, using the public model downloads. It needs no account and sends nothing anywhere.
-- **The rep counter.** It sits on top of the pose stream and covers squats, lunges, push-ups, bench press, curls, rows, pull-ups and chin-ups, shoulder and overhead presses, deadlifts, hip thrusts and glute bridges. Planks and other holds are timed sets instead: just the time left and a bar.
+- **The rep counter.** It sits on top of the pose stream and counts squats, push-ups and more from the camera. Planks and other holds are timed sets instead: just the time left and a bar.
 - **Feedback.** The count is the largest thing on screen, and recorded count clips say the number out loud. When the voice coach is on, echo cancellation keeps those clips out of the microphone.
 - **The log.** Sets are stored on the phone with SwiftData. A finished workout is saved to Apple Health as one workout, and, if the user allows it, heart rate and active calories are read for the set summary.
 
@@ -43,14 +43,14 @@ None of this needs an account. Camera workouts work signed out, and if someone d
 
 ## Making the count trustworthy
 
-Most of the work in counting reps from a pose stream is not detecting the movement. It is not counting the things that are not reps. The notes for a later TestFlight build list what we tightened: half reps, walking, standing up and getting into position no longer add reps, and counting keeps going for the whole workout.
+Most of the work in counting reps from a pose stream is not detecting the movement. It is not counting the things that are not reps. The notes for a later TestFlight build list what I tightened: half reps, walking, standing up and getting into position no longer add reps, and counting keeps going for the whole workout.
 
 The rest of the work is around the counter rather than inside it:
 
 - **Get the person in frame first.** A short "3, 2, 1, Go" puts you in position before the clock starts. During the set the screen says what to do (Move back, Come closer, Step into frame), and a setup check before the first set shows the one fix needed if something is off.
-- **Always leave a manual path.** If the camera can't see you, minus and plus stay one tap away. You can also correct the count by voice ("That was 10").
+- **Always leave a manual path.** If the camera can't see you, minus and plus stay one tap away. With the voice coach on, you can also correct the count by saying "That was 10".
 
-Changes to counting were the riskiest changes we made, because a wrong count is the first thing a user notices. So they go out behind feature flags. Camera counting has its own flag, internal builds have a pose debug overlay, and individual behaviours, such as asking for a count confirmation only when the counter is uncertain, can be turned off from the server without waiting for a new build to get through App Review.
+Changes to counting were the riskiest changes I made, because a wrong count is the first thing a user notices. So they go out behind feature flags. Camera counting has its own flag, internal builds have a pose debug overlay, and individual behaviours, such as asking for a count confirmation only when the counter is uncertain, can be turned off from the server without waiting for a new build to get through App Review.
 
 A rep checker model runs in shadow mode in internal builds, behind a flag. It sees the same sets as the live counter but never changes the count, so I can compare the two on real phones and real sets.
 
@@ -89,7 +89,7 @@ The phone runs the tool against its own workout state and shows a small chip wit
 
 The backend is TypeScript on AWS Lambda (Node 22, arm64) behind API Gateway and CloudFront, defined with the AWS CDK. It is split into functions by job: one for profile, sessions and sync; one for the trainer and voice tokens; one for sign-in (Better Auth, with Sign in with Apple, Google and email codes); one for operations; and one for subscription webhooks. App data is in six on-demand DynamoDB tables with point-in-time recovery. Sign-in data is in Postgres on Neon.
 
-Two details matter for a phone that is often offline in a gym. Workout uploads honour an `Idempotency-Key` header and keep the response for a while, so a retried upload doesn't create a duplicate workout. And sync does a last-write-wins merge in batches, so the same log can follow you to another device. Part 7 goes into the data model.
+Two details matter for a phone that is often offline in a gym. Workout uploads honour an `Idempotency-Key` header and keep the response for a while, so a retried upload doesn't create a duplicate workout. And sync does a last-write-wins merge in batches, so the same log can follow you to another device. A later part covers the data model.
 
 ## What I would do the same way again
 
@@ -104,7 +104,7 @@ Part 2 is [Drawing exercise figures from code](/notes/workout-director-2/). Stil
 
 - Part 3: Choosing a pose model for the phone
 - Part 4: Most of a rep counter is the reps it doesn't count
-- Part 5: Training a small rep checker on public video
+- Part 5: Testing counting changes before they ship
 - Part 6: A voice coach that asks before it acts
 - Part 7: A small TypeScript backend on AWS Lambda
 - Part 8: Shipping without breaking old phones

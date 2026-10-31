@@ -30,7 +30,7 @@ const cards: Card[] = [
     title: 'Workout Director',
     subtitle: 'An iPhone and iPad training app that counts reps on the device, with a voice coach.',
     footer: 'SwiftUI · TypeScript on AWS Lambda',
-    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp', '/assets/img/wd/iphone/07-progress-800.webp'],
+    phones: ['/assets/img/wd/iphone/02-voice-800.webp', '/assets/img/wd/iphone/07-progress-800.webp'],
   },
   {
     src: ogImages.projects.src,
@@ -38,14 +38,15 @@ const cards: Card[] = [
     title: 'Workout Director and Kalo',
     subtitle: 'Two iPhone apps: a training app that counts reps and a macro tracker.',
     footer: 'ashishkharche.com/projects',
-    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp', '/assets/img/kalo-2-photo-960.webp'],
+    // One dark Workout Director screen, so the card keeps one tone and the title fits on two lines.
+    phones: ['/assets/img/wd/iphone/02-voice-800.webp'],
   },
   {
     src: noteOgImages['workout-director-1'].src,
     eyebrow: 'Notes · Workout Director, part 1',
     title: 'Counting reps without the video leaving the phone',
     footer: 'ashishkharche.com/notes',
-    phones: ['/assets/img/wd/iphone/01-rep-counting-800.webp'],
+    phones: ['/assets/img/wd/iphone/02-voice-800.webp'],
   },
   {
     src: noteOgImages['workout-director-2'].src,
@@ -72,6 +73,8 @@ function html(card: Card, brand: string): string {
   const art = card.phones
     ? card.phones.map((src) => `<img class="phone" src="${asset(src)}" alt="">`).join('')
     : (card.figures ?? []).map((src) => `<img class="figure" src="${asset(src)}" alt="">`).join('')
+  // The camera screens show Mixkit stock footage, credited under the phones.
+  const footage = (card.phones ?? []).some((src) => /\/0[123]-[a-z-]+-800\.webp$/.test(src))
   const textWidth = card.phones
     ? 1200 - 144 - card.phones.length * 245 - 40
     : card.figures
@@ -79,20 +82,22 @@ function html(card: Card, brand: string): string {
       : 1056
   return `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family: Geist; src: url('${asset('/assets/fonts/Geist-Latin.woff2')}') format('woff2'); font-weight: 400 700; }
+@font-face { font-family: 'Geist Serif'; src: url('${asset('/assets/fonts/GeistSerif-Latin.woff2')}') format('woff2'); font-weight: 400; }
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 1200px; height: 630px; background: #ffffff; }
 body { font-family: Geist, sans-serif; color: #090a0b; -webkit-font-smoothing: antialiased; }
 .card { position: relative; width: 1200px; height: 630px; padding: 64px 72px; display: flex; gap: 40px; }
-.text > svg { align-self: flex-start; width: auto; }
+.text > svg { align-self: flex-start; width: auto; flex-shrink: 0; }
 .text { width: ${textWidth}px; display: flex; flex-direction: column; }
 .eyebrow { margin-top: 64px; font-size: 26px; font-weight: 500; color: #4d5755; }
-.title { margin-top: 18px; font-size: ${card.title.length > 30 ? 58 : 68}px; line-height: 1.08; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; }
+.title { margin-top: 18px; font-family: 'Geist Serif', serif; font-size: ${card.title.length > 18 ? 60 : 72}px; line-height: 1.08; font-weight: 400; letter-spacing: -0.015em; text-wrap: balance; }
 .subtitle { margin-top: 24px; font-size: 27px; line-height: 1.4; color: #4d5755; text-wrap: pretty; }
 .footer { margin-top: auto; font-size: 23px; color: #4d5755; }
 .art { margin-left: auto; display: flex; gap: 0; align-items: center; }
 .phone + .phone { margin-left: 20px; }
 .phone { height: 502px; width: auto; border-radius: 30px; border: 1px solid rgb(9 10 11 / 0.1); }
 .figure { width: 230px; height: auto; }
+.credit { position: absolute; right: 72px; bottom: 24px; font-size: 16px; color: #4d5755; }
 </style></head><body><div class="card">
 <div class="text">${brand}
 <p class="eyebrow">${escape(card.eyebrow)}</p>
@@ -101,6 +106,7 @@ ${card.subtitle ? `<p class="subtitle">${escape(card.subtitle)}</p>` : ''}
 ${card.footer ? `<p class="footer">${escape(card.footer)}</p>` : ''}
 </div>
 ${art ? `<div class="art">${art}</div>` : ''}
+${footage ? '<p class="credit">Footage: Mixkit, free licence</p>' : ''}
 </div></body></html>`
 }
 

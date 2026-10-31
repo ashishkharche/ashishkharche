@@ -44,7 +44,7 @@ It is rendered at build time from a path no route matches (see `src/server.ts`),
 browser on any unknown URL.
 `dist/server` is a by-product of the build and is not deployed.
 
-## Option B: Vercel builds from GitHub (`ashishkharche/ashishkharche`)
+## Option B: Vercel builds from GitHub (`ashishkharche/ashishkharche.com`)
 
 1. Push this folder as the repository root.
 2. In Vercel, connect the repository to the `ashishkharche` project. `vercel.json` in the repo sets everything the build needs:

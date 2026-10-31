@@ -19,8 +19,8 @@ export const roles: Role[] = [
     logo: 'paythru',
     role: 'Senior Mobile Engineer (Mar 2024 to Oct 2026), Mobile Engineer (Oct 2022 to Feb 2024), covering iOS, Android and AWS',
     paragraphs: [
-      'Paythru makes payments software for EV charging. In a team of ten, I built charging and payment features for about six white-label apps, mostly in Kotlin and Jetpack Compose, with some SwiftUI on iOS. I integrated Adyen for in-app payments and reworked the Bitrise pipeline so builds could go from commit to the stores, which shortened the release cycle. I also built the Kotlin and Jetpack Compose Terminal app for Adyen payment terminals, tested on a Castles S1U2 device.',
-      "In 2026 I worked on Paythru's new TypeScript payments platform on AWS, including the infrastructure, with idempotent payment handling, an audit log, monitoring and alarms.",
+      'Paythru makes payments software for EV charging. In a team of ten, I built charging and payment features for six white-label apps, mostly in Kotlin and Jetpack Compose, with some SwiftUI on iOS. I integrated Adyen for in-app payments and reworked the Bitrise pipeline so builds could go from commit to the stores, which shortened the release cycle. I also built the Kotlin and Jetpack Compose Terminal app for Adyen payment terminals, tested on a Castles S1U2 device.',
+      "In 2026 I worked on Paythru's new TypeScript payments platform on AWS, including the infrastructure, with idempotent payment handling, an audit log, monitoring and alarms. My role at Paythru ended in October 2026.",
     ],
   },
   {
@@ -43,7 +43,7 @@ export const roles: Role[] = [
     ],
   },
   {
-    when: '2021 to 2022',
+    when: 'Sep 2021 to Sep 2022',
     org: 'Kingston University, London',
     logo: 'kingston',
     role: 'MSc Software Engineering',

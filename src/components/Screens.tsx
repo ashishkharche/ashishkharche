@@ -2,6 +2,8 @@ import * as stylex from '@stylexjs/stylex'
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
 import {
   deviceSize,
+  footageCredit,
+  hasFootage,
   screen,
   screenPath,
   screenSrcSet,
@@ -24,6 +26,12 @@ interface PictureProps {
   eager?: boolean
   priority?: boolean
   xstyle?: stylex.StyleXStyles
+}
+
+/** The stock footage credit, shown under any group of screens that has a camera view in it. */
+export function FootageCredit({ ids }: { ids: readonly ScreenId[] }) {
+  if (!hasFootage(ids)) return null
+  return <p {...stylex.props(styles.credit)}>{footageCredit}</p>
 }
 
 /** One App Store screen: AVIF where the browser takes it, WebP otherwise, at the size it is shown. */
@@ -65,27 +73,30 @@ interface StageProps extends StageSpec {
 export function DeviceStage({ ipad, phones, size = 'card', priority = false, label }: StageProps) {
   const hero = size === 'hero'
   return (
-    <div
-      role={label ? 'group' : undefined}
-      aria-label={label}
-      {...stylex.props(styles.stage, hero ? styles.stageHero : styles.stageCard)}
-    >
-      <div {...stylex.props(styles.layer, styles.ipadLayer, styles.driftFar)}>
-        <ScreenPicture id={ipad} device="ipad" sizes={stageSizes.ipad} priority={priority} xstyle={styles.lifted} />
+    <>
+      <div
+        role={label ? 'group' : undefined}
+        aria-label={label}
+        {...stylex.props(styles.stage, hero ? styles.stageHero : styles.stageCard)}
+      >
+        <div {...stylex.props(styles.layer, styles.ipadLayer, styles.driftFar)}>
+          <ScreenPicture id={ipad} device="ipad" sizes={stageSizes.ipad} priority={priority} xstyle={styles.lifted} />
+        </div>
+        <div {...stylex.props(styles.layer, styles.phoneA, styles.driftNear)}>
+          <ScreenPicture
+            id={phones[0]}
+            device="iphone"
+            sizes={stageSizes.iphone}
+            eager={priority}
+            xstyle={styles.lifted}
+          />
+        </div>
+        <div {...stylex.props(styles.layer, styles.phoneB, styles.driftMid)}>
+          <ScreenPicture id={phones[1]} device="iphone" sizes={stageSizes.iphone} xstyle={styles.lifted} />
+        </div>
       </div>
-      <div {...stylex.props(styles.layer, styles.phoneA, styles.driftNear)}>
-        <ScreenPicture
-          id={phones[0]}
-          device="iphone"
-          sizes={stageSizes.iphone}
-          eager={priority}
-          xstyle={styles.lifted}
-        />
-      </div>
-      <div {...stylex.props(styles.layer, styles.phoneB, styles.driftMid)}>
-        <ScreenPicture id={phones[1]} device="iphone" sizes={stageSizes.iphone} xstyle={styles.lifted} />
-      </div>
-    </div>
+      <FootageCredit ids={[ipad, ...phones]} />
+    </>
   )
 }
 
@@ -96,7 +107,10 @@ export function Shots({ screens: ids, caption }: { screens: ScreenId[]; caption:
       {ids.map((id) => (
         <ScreenPicture key={id} id={id} device="iphone" sizes="(max-width: 560px) 30vw, 210px" xstyle={styles.edge} />
       ))}
-      <figcaption {...stylex.props(styles.caption, styles.fullRow)}>{caption}</figcaption>
+      <figcaption {...stylex.props(styles.caption, styles.fullRow)}>
+        {caption}
+        {hasFootage(ids) ? ` ${footageCredit}` : null}
+      </figcaption>
     </figure>
   )
 }
@@ -211,6 +225,7 @@ export function ScreenRail({ device, title }: { device: Device; title: string })
           ))}
         </ol>
       </div>
+      <FootageCredit ids={screens.map((item) => item.id as ScreenId)} />
     </section>
   )
 }
@@ -341,6 +356,13 @@ const styles = stylex.create({
     color: colors.muted,
   },
   railSection: { marginTop: '2rem' },
+  credit: {
+    marginTop: '0.75rem',
+    marginBottom: 0,
+    fontSize: '0.85rem',
+    lineHeight: 1.5,
+    color: colors.muted,
+  },
   railHead: {
     display: 'flex',
     alignItems: 'center',
