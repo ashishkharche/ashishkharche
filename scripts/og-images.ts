@@ -78,10 +78,10 @@ function html(card: Card, brand: string): string {
       ? 1200 - 144 - card.figures.length * 230 - 40
       : 1056
   return `<!doctype html><html><head><meta charset="utf-8"><style>
-@font-face { font-family: Inter; src: url('${asset('/assets/fonts/Inter-Latin.woff2')}') format('woff2'); font-weight: 400 700; }
+@font-face { font-family: Geist; src: url('${asset('/assets/fonts/Geist-Latin.woff2')}') format('woff2'); font-weight: 400 700; }
 * { box-sizing: border-box; margin: 0; }
 html, body { width: 1200px; height: 630px; background: #ffffff; }
-body { font-family: Inter, sans-serif; color: #090a0b; -webkit-font-smoothing: antialiased; }
+body { font-family: Geist, sans-serif; color: #090a0b; -webkit-font-smoothing: antialiased; }
 .card { position: relative; width: 1200px; height: 630px; padding: 64px 72px; display: flex; gap: 40px; }
 .text > svg { align-self: flex-start; width: auto; }
 .text { width: ${textWidth}px; display: flex; flex-direction: column; }

@@ -24,7 +24,7 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/site.webmanifest' },
       {
         rel: 'preload',
-        href: '/assets/fonts/Inter-Latin.woff2',
+        href: '/assets/fonts/Geist-Latin.woff2',
         as: 'font',
         type: 'font/woff2',
         crossOrigin: 'anonymous',

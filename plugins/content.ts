@@ -24,7 +24,7 @@ export interface RenderedDiagram {
 export function renderDiagram(source: string, id: string): RenderedDiagram {
   const result = render(source, {
     idPrefix: `${id}-`,
-    fontFamily: 'Inter, system-ui, sans-serif',
+    fontFamily: 'Geist, system-ui, sans-serif',
     fontSize: 16,
     padding: 8,
     maxWidth: 980,

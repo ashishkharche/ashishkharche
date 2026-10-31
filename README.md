@@ -17,18 +17,19 @@ Every page is prerendered to static HTML and works with JavaScript turned off.
 
 ## Stack
 
-| Part        | Choice                                                         |
-| ----------- | -------------------------------------------------------------- |
-| Framework   | TanStack Start 1.169 with TanStack Router 1.170, React 19      |
-| Build       | Vite 8, static prerendering (no server at runtime)             |
-| Language    | TypeScript (strict)                                            |
-| Styling     | StyleX 0.19, compiled to a single static CSS file              |
-| UI          | Base UI 1.9 (theme toggle)                                     |
-| Content     | MDX with YAML frontmatter                                      |
-| Diagrams    | Mermaid sources rendered to SVG at build time with Pele 1.12   |
-| Code blocks | Shiki 4.5, highlighted at build time                           |
-| Checks      | ESLint, Prettier, Vitest, Playwright with axe-core, linkinator |
-| Hosting     | Vercel, as static files                                        |
+| Part        | Choice                                                                 |
+| ----------- | ---------------------------------------------------------------------- |
+| Framework   | TanStack Start 1.169 with TanStack Router 1.170, React 19              |
+| Build       | Vite 8, static prerendering (no server at runtime)                     |
+| Language    | TypeScript (strict)                                                    |
+| Styling     | StyleX 0.19, compiled to a single static CSS file                      |
+| UI          | Base UI 1.9 (theme toggle)                                             |
+| Content     | MDX with YAML frontmatter                                              |
+| Diagrams    | Mermaid sources rendered to SVG at build time with Pele 1.12           |
+| Code blocks | Shiki 4.5, highlighted at build time                                   |
+| Fonts       | Geist, Geist Serif (headings), Geist Mono (code); self-hosted, SIL OFL |
+| Checks      | ESLint, Prettier, Vitest, Playwright with axe-core, linkinator         |
+| Hosting     | Vercel, as static files                                                |
 
 A strict Content Security Policy is applied: no inline styles, and each page gets a policy with the hashes of its own inline
 scripts. See [STACK.md](STACK.md) for the reasoning behind each choice.

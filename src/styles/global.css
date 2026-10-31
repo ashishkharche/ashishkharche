@@ -1,19 +1,12 @@
 /*
-  Global CSS: font face and a small reset. Everything else is styled with
+  Global CSS: font faces and a small reset. Everything else is styled with
   StyleX next to the components that use it.
 */
-@font-face {
-  font-family: 'Inter';
-  src: url('/assets/fonts/Inter-Latin.woff2') format('woff2');
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 /*
-  Geist Serif for display headings, with Geist and Geist Mono as an optional
-  body and code pairing (tokens.stylex.ts picks which). All three are Latin
-  subsets under the SIL Open Font License (public/assets/fonts/Geist-OFL.txt).
+  Geist for body text, Geist Serif for display headings and Geist Mono for
+  code. All three are Latin subsets under the SIL Open Font License
+  (public/assets/fonts/Geist-OFL.txt).
   The fallback faces are local fonts scaled to Geist's metrics, so the swap
   from fallback to web font does not move the text.
 */

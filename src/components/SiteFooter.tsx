@@ -30,11 +30,14 @@ export function SiteFooter() {
           </li>
         </ul>
       </div>
-      {/* A London riverside drawing across the full width. Decorative, so it has no alt text. */}
+      {/*
+        Line art across the full width: the AK mark, Workout Director exercise
+        figures mid-movement and the WD mark on a phone. Decorative, so it has no alt text.
+      */}
       <img
-        src="/assets/img/footer-london.svg"
-        width={2560}
-        height={880}
+        src="/assets/img/footer-identity.svg"
+        width={2400}
+        height={560}
         alt=""
         loading="lazy"
         decoding="async"
@@ -70,7 +73,7 @@ const styles = stylex.create({
     rowGap: '0.4rem',
     columnGap: '1.25rem',
   },
-  // On phones the drawing is shown larger and cropped at the sides, so the middle of the skyline stays readable.
+  // On phones the drawing is shown larger and cropped at the sides, so the figures stay readable.
   art: {
     display: 'block',
     width: { default: '100%', [breakpoints.phone]: '170%' },

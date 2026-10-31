@@ -15,6 +15,7 @@ Checked against the official docs and npm on 30 October 2026.
 | Long-form content | MDX files in `content/`, with YAML frontmatter for notes                                                                      | `@mdx-js/rollup` 3.1                                           |
 | Diagrams          | Mermaid sources rendered to SVG at build time with Pele                                                                       | `pele` 1.12                                                    |
 | Code highlighting | Shiki through `@shikijs/rehype`, at build time, tokens written as classes                                                     | `shiki` 4.5, `@shikijs/rehype` 4.5                             |
+| Fonts             | Geist for body text, Geist Serif for headings, Geist Mono for code; self-hosted Latin subsets                                 | `geist` 1.9 font files                                         |
 | Language          | TypeScript, strict (`strict`, `noUncheckedIndexedAccess`)                                                                     | TypeScript 7 for `tsc`, TypeScript 6 API for typescript-eslint |
 | Package manager   | pnpm                                                                                                                          | 10.34                                                          |
 | Checks            | ESLint (typescript-eslint, StyleX, jsx-a11y, React Hooks), Prettier, Vitest, Playwright with axe-core, linkinator, Lighthouse |                                                                |
@@ -45,6 +46,13 @@ it does not use Base UI's `NavigationMenu`. There is no dialog or tooltip on the
 **MDX.** The case study and notes are MDX in `content/`, so the prose reads like Markdown while still using components for diagrams,
 screenshot rows and the gallery. A small Vite plugin (`plugins/content.ts`) lets list pages import only a note's frontmatter
 (`note.mdx?frontmatter`), so the notes index does not ship note bodies.
+
+**Fonts.** Body text is Geist, headings are Geist Serif and code is Geist Mono, all from the `geist` 1.9 package and under the
+SIL Open Font License (the licence is in `public/assets/fonts/Geist-OFL.txt`). Each is cut down to a Latin subset and served from
+`public/assets/fonts` (no font CDN, so `font-src 'self'` holds). Geist and Geist Mono keep their weight axis from 400 to 700; Geist Serif
+has one weight, so headings set in it use 400. Geist and Geist Serif are preloaded because both are above the fold on every page. Local
+fallback faces scaled to Geist's metrics (`size-adjust` and the ascent and descent overrides in `src/styles/global.css`) keep the swap
+from moving text.
 
 **Pele.** The same plugin turns `import diagram from './x.mmd'` into a build-time Pele render. The output is cleaned the same way as on
 the previous site (root `style` removed, `rx` attributes instead of inline styles, `role="img"` and a `<title>`), and its colours come

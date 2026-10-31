@@ -89,12 +89,9 @@ const dark = {
 export const lightTheme = stylex.createTheme(colors, light)
 export const darkTheme = stylex.createTheme(colors, dark)
 
-// Body and code fonts. Geist and Geist Mono are also bundled: to try that pairing, set sans to
-// 'Geist, "Geist Fallback", ui-sans-serif, system-ui, sans-serif' and mono to '"Geist Mono", ui-monospace, monospace',
-// and preload Geist-Latin.woff2 instead of Inter-Latin.woff2 in src/routes/__root.tsx.
 export const fonts = stylex.defineConsts({
-  sans: 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
-  mono: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+  sans: 'Geist, "Geist Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+  mono: '"Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
   // Display headings. Geist Serif has one weight, so headings set in it use 400.
   serif: '"Geist Serif", "Geist Serif Fallback", ui-serif, Georgia, serif',
 })
