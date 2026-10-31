@@ -47,10 +47,10 @@ A partial is a rep that goes at least 70% of the way from the rest line to the w
       name: 'wd-depth-check',
       width: 720,
       height: 900,
-      alt: "Top: a Workout Director set summary captured in the simulator, showing \"Set 1 of 4, Goblet squat\", 10 of 10 reps, 16 kg, a strip of rep tiles with one outlined, and the line \"1 rep didn't count. Go a bit lower.\" Bottom: a chart of the right knee angle in a stock squat clip with dashed lines at 155 degrees (rest), about 124 degrees (70%) and 110 degrees (work), and red lines at each of the four counted reps.",
+      alt: "Top: a Workout Director set summary captured in the simulator, showing \"Set 1 of 4, Goblet squat\", 10 of 10 reps, 16 kg, a strip of rep tiles with one outlined, and the line \"1 rep didn't count. Go a bit lower.\" Bottom: a chart of the left knee angle in a stock Smith machine squat clip, with dashed lines at 155 degrees (rest), about 124 degrees (70%) and 110 degrees (work), and red lines at the three counted reps.",
     },
   ]}
-  caption={"Top: a simulator capture of the set summary in a 1.0.91 development build with a demo set. Bottom: knee angle from a stock squat clip (Pexels) using MediaPipe pose, with the app's lines. Every rep in this clip was deep, around 73\u201379\u00b0, so none of them falls in the partial band."}
+  caption={"Top: a simulator capture of the set summary in a 1.0.91 development build with a demo set. Bottom: knee angle from a stock Smith machine squat clip (Pexels) using MediaPipe pose, with the app's lines. Every rep in this clip was deep, well past 110\u00b0, so none of them falls in the partial band."}
 />
 
 When a partial happens, the count stays where it was. In spoken mode, the app plays a short two-pulse tone and says one line. In haptics mode it plays the tone only. Both give a warning tap. In silent mode it does nothing.
