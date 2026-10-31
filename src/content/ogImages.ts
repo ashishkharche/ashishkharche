@@ -1,0 +1,42 @@
+/**
+ * Link preview images (Open Graph and Twitter), 1200 by 630. The per-page
+ * cards are drawn by `pnpm og-images` (scripts/og-images.ts) into
+ * public/assets/og/; the default card is the AK lockup on white.
+ */
+export interface OgImage {
+  src: string
+  alt: string
+}
+
+export const defaultOgImage: OgImage = {
+  src: '/assets/og.png',
+  alt: 'Ashish Kharche, with the AK mark.',
+}
+
+export const ogImages = {
+  projects: {
+    src: '/assets/og/projects.png',
+    alt: 'Projects by Ashish Kharche: Workout Director and Kalo, with a screen from each app.',
+  },
+  workoutDirector: {
+    src: '/assets/og/workout-director.png',
+    alt: 'Workout Director case study, with screens of Live Coach counting reps and the day plan.',
+  },
+} satisfies Record<string, OgImage>
+
+/** Preview cards for notes, by slug. */
+export const noteOgImages = {
+  'workout-director-1': {
+    src: '/assets/og/notes-workout-director-1.png',
+    alt: 'Counting reps without the video leaving the phone. Workout Director, part 1.',
+  },
+  'workout-director-2': {
+    src: '/assets/og/notes-workout-director-2.png',
+    alt: 'Drawing exercise figures from code. Workout Director, part 2, with a start and end pose.',
+  },
+} satisfies Record<string, OgImage>
+
+/** The preview image for a note, or the default card when it has none. */
+export function noteOgImage(slug: string): OgImage {
+  return (noteOgImages as Record<string, OgImage | undefined>)[slug] ?? defaultOgImage
+}

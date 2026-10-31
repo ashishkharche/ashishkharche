@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { ogImages } from '~/content/ogImages'
 import { documentTitle, seo } from '~/lib/seo'
 
 describe('seo', () => {
@@ -15,6 +16,21 @@ describe('seo', () => {
     expect(head.meta).toContainEqual({ property: 'og:image', content: 'https://ashishkharche.com/assets/og.png' })
     expect(head.meta).toContainEqual({ name: 'twitter:card', content: 'summary_large_image' })
     expect(head.meta).toContainEqual({ name: 'description', content: 'Work history.' })
+  })
+
+  it('uses the AK card by default and a page image when given', () => {
+    const plain = seo({ path: '/work/', title: 'Work', description: 'Work history.' })
+    expect(plain.meta).toContainEqual({ name: 'twitter:image', content: 'https://ashishkharche.com/assets/og.png' })
+    const page = seo({
+      path: '/projects/workout-director/',
+      title: 'Workout Director',
+      description: 'Case study.',
+      image: ogImages.workoutDirector,
+    })
+    const image = 'https://ashishkharche.com/assets/og/workout-director.png'
+    expect(page.meta).toContainEqual({ property: 'og:image', content: image })
+    expect(page.meta).toContainEqual({ name: 'twitter:image', content: image })
+    expect(page.meta).toContainEqual({ property: 'og:image:alt', content: ogImages.workoutDirector.alt })
   })
 
   it('marks the 404 page noindex and gives it no canonical link', () => {

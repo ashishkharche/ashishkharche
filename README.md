@@ -18,6 +18,7 @@ pnpm test:e2e       # Playwright: every page, no-JS, theme, axe in light and dar
 pnpm check:links    # crawls the build and checks every link and image
 pnpm lighthouse     # mobile and desktop scores for every page
 pnpm screenshots    # full-page screenshots at 375, 768 and 1280 in light and dark (needs `pnpm preview` running)
+pnpm og-images      # redraws the link preview cards in public/assets/og (commit the PNGs)
 ```
 
 Playwright and the screenshot and Lighthouse scripts use the installed Chrome. Set `PW_CHANNEL=chromium` after
@@ -50,7 +51,8 @@ Create `content/notes/<slug>.mdx` with frontmatter (`title`, `date` as YYYY-MM-D
 `description`), add `/notes/<slug>/` to `sitemapPaths` in `src/content/site.ts`, and remove its title from `comingNotes` in
 `src/content/notes.ts` if it was listed there. Diagrams: add a `.mmd` file to `content/diagrams`, import it in the MDX file and
 use `<Diagram diagram={…} title="…" caption="…" />`. Code: use fenced blocks with a language tag (` ```python `);
-the language has to be listed in `plugins/highlight.ts`.
+the language has to be listed in `plugins/highlight.ts`. Give the note a link preview card in `src/content/ogImages.ts` and
+`scripts/og-images.ts`, then run `pnpm og-images`; the build fails if a page's preview image is missing.
 
 ## Content rules
 

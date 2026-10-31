@@ -1,9 +1,12 @@
 // Crawls the built site and checks every link and image. Internal links must
 // all resolve; external links are checked too unless --internal is passed.
-// LinkedIn refuses automated requests (status 999), so it is skipped.
+// LinkedIn refuses automated requests (status 999), so it is skipped. Links to
+// the site's own address (such as the og:image URLs) are checked against this
+// build, so new files are covered before they are deployed.
 import { spawn } from 'node:child_process'
 import { setTimeout as sleep } from 'node:timers/promises'
 import { LinkChecker } from 'linkinator'
+import { site } from '../src/content/site.ts'
 
 const port = 4174
 const base = `http://localhost:${port}/`
@@ -20,6 +23,7 @@ try {
     timeout: 15000,
     concurrency: 8,
     retry: true,
+    urlRewriteExpressions: [{ pattern: new RegExp(`^${site.url.replace(/[.]/g, '\\.')}/`), replacement: base }],
     linksToSkip: ['^mailto:', 'linkedin\\.com', ...(internalOnly ? ['^https?://(?!localhost)'] : [])],
   })
   const broken = result.links.filter((link) => link.state === 'BROKEN')

@@ -3,8 +3,9 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { findBanned, loadLocalTerms, localTermsFile } from '../src/content/rules.ts'
-import { sitemapPaths } from '../src/content/site.ts'
+import { site, sitemapPaths } from '../src/content/site.ts'
 import { withPolicy } from '../src/lib/csp.ts'
+import { checkPreviewTags, pngSize } from '../src/lib/preview.ts'
 import { buildSitemap } from '../src/lib/sitemap.ts'
 
 const out = new URL('../dist/client/', import.meta.url).pathname
@@ -31,6 +32,18 @@ for (const file of pages) {
   if (/\sstyle="/i.test(html)) problems.push(`${name}: has an inline style attribute (blocked by the CSP)`)
   if (/<style[\s>]/i.test(html)) problems.push(`${name}: has an inline <style> element (blocked by the CSP)`)
   for (const hit of findBanned(html)) problems.push(`${name}: ${hit}`)
+  if (name !== '404.html') {
+    const preview = checkPreviewTags(html, site.url)
+    for (const problem of preview.problems) problems.push(`${name}: ${problem}`)
+    if (preview.imagePath) {
+      const image = await readFile(join(out, preview.imagePath)).catch(() => undefined)
+      const size = image && pngSize(image)
+      if (!image) problems.push(`${name}: og:image ${preview.imagePath} is not in the build`)
+      else if (!size || size.width !== 1200 || size.height !== 630) {
+        problems.push(`${name}: og:image ${preview.imagePath} is not a 1200x630 PNG`)
+      }
+    }
+  }
   html = withPolicy(html)
   await writeFile(file, html)
 }

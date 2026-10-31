@@ -22,6 +22,7 @@
     "deploy:manifest": "node scripts/deploy-manifest.ts",
     "lighthouse": "node scripts/lighthouse.ts",
     "screenshots": "node scripts/screenshots.ts",
+    "og-images": "node scripts/og-images.ts",
     "compare": "node scripts/compare-content.ts"
   },
   "dependencies": {

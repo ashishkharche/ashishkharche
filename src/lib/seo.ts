@@ -1,3 +1,4 @@
+import { defaultOgImage, type OgImage } from '~/content/ogImages'
 import { site } from '~/content/site'
 import { absoluteUrl } from './urls'
 
@@ -10,6 +11,8 @@ export interface PageMeta {
   description: string
   type?: 'website' | 'article' | 'profile'
   noindex?: boolean
+  /** Link preview image; the AK card when left out. */
+  image?: OgImage
 }
 
 type MetaTag =
@@ -24,7 +27,8 @@ export function documentTitle({ title, fullTitle }: Pick<PageMeta, 'title' | 'fu
 export function pageMeta(page: PageMeta): MetaTag[] {
   const url = absoluteUrl(page.path)
   const ogTitle = page.title ?? site.name
-  const image = absoluteUrl(site.ogImage)
+  const preview = page.image ?? defaultOgImage
+  const image = absoluteUrl(preview.src)
   const tags: MetaTag[] = [{ title: documentTitle(page) }, { name: 'description', content: page.description }]
   if (page.noindex) tags.push({ name: 'robots', content: 'noindex' })
   tags.push(
@@ -36,12 +40,13 @@ export function pageMeta(page: PageMeta): MetaTag[] {
     { property: 'og:image', content: image },
     { property: 'og:image:width', content: '1200' },
     { property: 'og:image:height', content: '630' },
-    { property: 'og:image:alt', content: site.ogImageAlt },
+    { property: 'og:image:alt', content: preview.alt },
     { property: 'og:locale', content: site.locale },
     { name: 'twitter:card', content: 'summary_large_image' },
     { name: 'twitter:title', content: ogTitle },
     { name: 'twitter:description', content: page.description },
     { name: 'twitter:image', content: image },
+    { name: 'twitter:image:alt', content: preview.alt },
   )
   return tags
 }

@@ -1,3 +1,4 @@
+import { ogImages } from '~/content/ogImages'
 import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute } from '@tanstack/react-router'
 import CaseStudy from '#content/projects/workout-director.mdx'
@@ -21,6 +22,7 @@ export const Route = createFileRoute('/projects/workout-director')({
       description:
         'Case study: an iPhone training app that counts reps on the device and has a voice coach. SwiftUI app and a TypeScript backend on AWS Lambda.',
       type: 'article',
+      image: ogImages.workoutDirector,
     }),
   component: WorkoutDirector,
 })

@@ -1,3 +1,4 @@
+import { noteOgImage } from '~/content/ogImages'
 import * as stylex from '@stylexjs/stylex'
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { Diagram } from '~/components/Diagram'
@@ -19,7 +20,13 @@ export const Route = createFileRoute('/notes/$slug')({
   },
   head: ({ loaderData }) =>
     loaderData
-      ? seo({ path: loaderData.path, title: loaderData.title, description: loaderData.description, type: 'article' })
+      ? seo({
+          path: loaderData.path,
+          title: loaderData.title,
+          description: loaderData.description,
+          type: 'article',
+          image: noteOgImage(loaderData.slug),
+        })
       : {},
   component: NotePage,
 })

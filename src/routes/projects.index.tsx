@@ -1,3 +1,4 @@
+import { ogImages } from '~/content/ogImages'
 import * as stylex from '@stylexjs/stylex'
 import { createFileRoute } from '@tanstack/react-router'
 import { Main } from '~/components/Main'
@@ -14,6 +15,7 @@ export const Route = createFileRoute('/projects/')({
       path: '/projects/',
       title: 'Projects',
       description: 'Projects by Ashish Kharche: Workout Director and Kalo.',
+      image: ogImages.projects,
     }),
   component: Projects,
 })
