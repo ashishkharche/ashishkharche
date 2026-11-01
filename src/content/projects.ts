@@ -37,6 +37,20 @@ export const workoutDirectorStack = [
   'Postgres',
 ] as const
 
+export type StackItem = (typeof workoutDirectorStack)[number]
+
+/** A few stack items under a short label, shown as tags on a project card. */
+export interface StackGroup {
+  label: string
+  items: StackItem[]
+}
+
+/** The stack on the Workout Director card: a short pick from the full list, split into the app and its backend. */
+export const workoutDirectorCardStack: StackGroup[] = [
+  { label: 'App', items: ['SwiftUI', 'SwiftData', 'MediaPipe BlazePose', 'Apple Vision'] },
+  { label: 'Backend', items: ['TypeScript', 'AWS Lambda', 'DynamoDB', 'AWS CDK'] },
+]
+
 export const workoutDirectorLinks: ExternalLink[] = [
   { label: 'App Store', href: links.workoutDirectorStore },
   { label: 'workoutdirector.com', href: links.workoutDirectorSite },
@@ -51,6 +65,8 @@ export interface ProjectCard {
   logo: LogoName
   /** Outside links shown under the summary, such as the App Store listing. */
   links?: ExternalLink[]
+  /** Stack tags shown under the links. */
+  stack?: StackGroup[]
   /** Three phone screenshots in a row. */
   shots?: Screenshot[]
   /** Or an iPad and two iPhone screens, layered. */
@@ -63,9 +79,10 @@ export const workoutDirectorCard: ProjectCard = {
   external: false,
   summary:
     'An iPhone and iPad training app that counts reps with the front camera, on the device, while a voice coach talks you through the workout.',
-  meta: 'SwiftUI · TypeScript on AWS Lambda · Case study',
+  meta: 'iPhone and iPad app · Case study',
   logo: 'workoutDirector',
   links: workoutDirectorLinks,
+  stack: workoutDirectorCardStack,
   stage: { ipad: '05-form', phones: ['02-voice', '08-today'] },
 }
 

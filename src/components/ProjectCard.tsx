@@ -1,5 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
+import { useId } from 'react'
 import { Logo } from './Logo'
 import { DeviceStage } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
@@ -22,6 +23,7 @@ interface Props {
  */
 export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Props) {
   const Heading = headingLevel
+  const stackId = useId()
   const linkProps = stylex.props(styles.link)
   const label = (
     <>
@@ -86,6 +88,24 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
                 </a>
               ))}
             </p>
+          ) : null}
+          {card.stack?.length ? (
+            <div role="group" aria-label="Built with" {...stylex.props(styles.stack)}>
+              {card.stack.map((group, index) => (
+                <div key={group.label} {...stylex.props(styles.stackRow)}>
+                  <span id={`${stackId}-${index}`} {...stylex.props(styles.stackLabel)}>
+                    {group.label}
+                  </span>
+                  <ul role="list" aria-labelledby={`${stackId}-${index}`} {...stylex.props(styles.tags)}>
+                    {group.items.map((item) => (
+                      <li key={item} {...stylex.props(styles.tag)}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           ) : null}
         </div>
       </div>
@@ -161,5 +181,34 @@ const styles = stylex.create({
   },
   outLink: { position: 'relative', zIndex: 1 },
   outArrow: { fontSize: '0.8em' },
+  // The stack as small outlined tags in the monospace face, one row per group.
+  stack: { display: 'grid', rowGap: '0.6rem', marginTop: '1.4rem' },
+  stackRow: {
+    display: 'grid',
+    gridTemplateColumns: { default: '5.5rem minmax(0, 1fr)', [breakpoints.phone]: '1fr' },
+    alignItems: 'baseline',
+    columnGap: '0.75rem',
+    rowGap: '0.35rem',
+  },
+  stackLabel: {
+    fontFamily: fonts.mono,
+    fontSize: '0.72rem',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: colors.muted,
+  },
+  tags: { listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: '0.4rem' },
+  tag: {
+    fontFamily: fonts.mono,
+    fontSize: '0.78rem',
+    lineHeight: 1.4,
+    paddingBlock: '0.2rem',
+    paddingInline: '0.55rem',
+    borderRadius: '6px',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: colors.diagramEdge,
+    color: colors.text,
+  },
   text: { fontSize: 'clamp(1.05rem, 1.8vw, 1.2rem)', lineHeight: 1.55, color: colors.muted, maxWidth: '34em' },
 })
