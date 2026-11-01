@@ -40,7 +40,7 @@ I wanted one consistent figure across every move, light and dark versions, and a
 
 ## The pieces
 
-- **The body.** The base mesh, the 163-bone default rig and the shape targets come from MakeHuman's MPFB2 assets, which are CC0. The script builds the body directly from those files, so no Blender add-on is needed. Targets push it towards an athletic build, and corrective shape keys keep elbows and knees from collapsing when they bend.
+- **The body.** The base mesh and the shape targets come from MakeHuman's MPFB2 data, and the 163-bone default rig and its weights from MakeHuman itself. All of it is CC0. The script builds the body directly from those files, so no Blender add-on is needed. Targets push it towards an athletic build, and corrective shape keys keep elbows and knees from collapsing when they bend.
 - **Clothes.** Shorts, a tee or tank and trainers are real cut geometry, so hems and collars draw as clean lines instead of texture.
 - **Equipment.** Dumbbells, barbells and plates, kettlebells, benches and machines are built in code at real-world sizes.
 - **Reference images.** Photos from free-exercise-db (public domain, under the Unlicense) show the start and end of each move. Where a photo was a front view or didn't show good form, I also compared the pose with frames from exercise demo videos, and only the measurements went into the checks.
@@ -198,7 +198,7 @@ def limb_region(vertex, bone_head, bone_tail, facing, half_angle, start, end, so
 
 The real regions have more rules than this: torso muscles use boxes filtered by surface normal, large groups are split into their heads with a groove between them, a secondary muscle never paints over a primary one, and a few regions are clipped where a tint was spilling onto the wrong skin. The values in the excerpt are placeholders, not the ones I use.
 
-A theme turns the weights into colours for the light and dark versions. In the app, the primary muscles are coral, the app's accent colour, and secondary muscles are a lighter tint of it.
+A theme turns the weights into colours for the light and dark versions. In the app, the primary muscles are coral, the app's accent colour, and secondary muscles get a softer mix of it.
 
 ## Line art
 
@@ -227,7 +227,7 @@ The few anatomical lines that an illustrator would draw, such as the edge of the
 Two problems took longer than I expected:
 
 - **Lines under clothes.** Freestyle's visibility test is unreliable when a garment sits a few millimetres off the skin, so body lines showed through the shirt. The fix was to remove body edge marks wherever a garment covers the same rest-pose vertices, found with a KD-tree on a copy of the garment.
-- **Lines that pop between frames.** On the bench press loop, the outline of the upper arm briefly disappeared on one frame. Rendering one line set at a time showed why: at that pose the edge of the bar lay exactly on the arm's outline, so two strokes merged into one. The fix was a background-coloured halo under every equipment outline, so body lines next to the bar are always cut back by the same amount.
+- **Lines that pop between frames.** On the bench press loop, the outline of the near arm briefly disappeared for a frame or two. Rendering one line set at a time showed why: at that pose the edge of the bar lay exactly on the arm's outline, so two strokes merged into one. The fix was a render option that draws a background-coloured halo under every equipment outline, so body lines next to the bar are always cut back by the same amount.
 
 ## Checks before a figure ships
 
@@ -252,7 +252,7 @@ The fix was to switch the mesh modifiers off while bones are being solved and tu
 
 A figure pack is an asset catalog: one image set per pose, each with light and dark appearances at @2x and @3x, on a transparent background. Start and end share one crop, so the two poses line up exactly.
 
-On the Swift side there is a small lookup from the exercise id to the image set names, with a fallback for ids written with underscores:
+On the Swift side there is a small lookup from the exercise name to the image set names. Names are matched in lower case, and ids written with underscores resolve too:
 
 ```swift
 /// Our own exercise figures in ExerciseFigures.xcassets: a start and an end pose,
@@ -264,15 +264,22 @@ struct ExerciseFigure: Equatable {
     /// One pose, nothing to move between.
     var isHold: Bool { start == end }
 
-    private static let byName: [String: ExerciseFigure] = [
-        "Goblet Squat": ExerciseFigure(start: "ExerciseFigureGobletSquatStart",
-                                       end: "ExerciseFigureGobletSquatEnd"),
-        "Plank": ExerciseFigure(start: "ExerciseFigurePlankStart", end: "ExerciseFigurePlankStart"),
+    private static let byName: [String: ExerciseFigure] = {
+        let goblet = ExerciseFigure(start: "ExerciseFigureGobletSquatStart",
+                                    end: "ExerciseFigureGobletSquatEnd")
+        let plank = ExerciseFigure(start: "ExerciseFigurePlankStart",
+                                   end: "ExerciseFigurePlankStart")
         // ...
-    ]
+        return [
+            "goblet squat": goblet,
+            "kettlebell goblet squat": goblet,
+            "plank": plank,
+        ]
+    }()
 
     static func of(_ move: String) -> ExerciseFigure? {
-        byName[move] ?? byName[move.replacingOccurrences(of: "_", with: " ")]
+        byName[move.replacingOccurrences(of: "_", with: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines).lowercased()]
     }
 }
 ```

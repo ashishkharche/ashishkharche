@@ -1,7 +1,7 @@
 flowchart TB
   subgraph Phone["On the iPhone"]
     direction TB
-    CAM["Front camera frames"] --> POSE["Pose tracking (MediaPipe, on device)"]
+    CAM["Camera frames (front or back)"] --> POSE["Pose tracking (MediaPipe, on device)"]
     POSE --> REPS["Rep counter and form checks"]
     REPS --> UI["Count on screen, recorded count clips"]
     REPS --> STATE["Workout state: set, reps, rest"]

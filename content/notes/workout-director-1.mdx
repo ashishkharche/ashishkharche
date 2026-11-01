@@ -10,7 +10,7 @@ description: 'Workout Director, part 1: the camera feed never leaves the iPhone.
 import onDevice from '../diagrams/01-on-device-boundary.mmd'
 import systemOverview from '../diagrams/02-system-overview.mmd'
 
-Workout Director is an iPhone and iPad training app that I built. It is published on the App Store by Shelgaon Ltd as "Workout Director: Gym & Home". You prop the phone up and press Start; the front camera counts your reps and a voice coach talks you through the session. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases.
+Workout Director is an iPhone and iPad training app that I built. It is published on the App Store by Shelgaon Ltd as "Workout Director - Gym & Home". You prop the phone up and press Start; the camera counts your reps and a voice coach talks you through the session. It uses the front camera by default, and you can switch to the back camera to film someone else. I wrote the SwiftUI app and its TypeScript backend on AWS Lambda, and I ran the TestFlight and App Store releases.
 
 This is the first of a few notes on how it is built. I am starting with the decision that shaped most of the others: the camera feed stays on the phone. Video is never recorded, saved or uploaded.
 
@@ -18,12 +18,12 @@ This is the first of a few notes on how it is built. I am starting with the deci
 
 A rep counter that streams video to a server would be easier in some ways. You could run bigger models and fix counting bugs in one place. But it would mean sending footage of someone's body, often filmed at home, to a server, and every rep would depend on the network.
 
-Keeping the camera local gave me a privacy promise I could state plainly in the App Store listing. It also forced a clear split. The phone owns everything that has to happen in real time: pose tracking, counting, timers and cues. The network is only used for things that can tolerate a delay: syncing the log, the trainer chat, and the voice coach's speech.
+Keeping the camera local gave me a privacy promise I could state plainly in the App Store listing. It also forced a clear split. The phone owns everything that has to happen in real time: pose tracking, counting, timers and cues. The network is only used for things the workout can carry on without: syncing the log, the trainer chat and the voice coach.
 
 <Diagram
   diagram={onDevice}
   wide
-  title="Diagram of what stays on the iPhone (camera frames, pose tracking, rep counter, workout state, local log) and what leaves it (short text state notes to the voice coach, synced sets to the backend). Video never leaves the phone."
+  title="Diagram of what stays on the iPhone (front or back camera frames, pose tracking, rep counter, workout state, local log) and what leaves it (short text state notes to the voice coach, synced sets to the backend). Video never leaves the phone."
   caption="What stays on the iPhone and what leaves it. The camera feed never leaves the device."
 />
 
@@ -34,25 +34,32 @@ Keeping the camera local gave me a privacy promise I could state plainly in the 
   caption="The camera counting a push-up set, with examples of what you can say to the coach; typing in reps without the camera; and the workout summary afterwards. App Store screenshots."
 />
 
-- **Pose tracking.** Google MediaPipe runs on the device, using the public model downloads. It needs no account and sends nothing anywhere.
+- **Pose tracking.** Google's MediaPipe Pose Landmarker runs on the device with the BlazePose Full model. The model file ships inside the app, so nothing is downloaded at run time and no account is needed. If MediaPipe can't start, or runs below 12 frames a second, that workout switches to Apple's Vision body pose and keeps the count.
 - **The rep counter.** It sits on top of the pose stream and counts squats, push-ups and more from the camera. Planks and other holds are timed sets instead: just the time left and a bar.
-- **Feedback.** The count is the largest thing on screen, and recorded count clips say the number out loud. When the voice coach is on, echo cancellation keeps those clips out of the microphone.
+- **Feedback.** The count is big on screen, and short prerecorded clips in the coach's voice say each number out loud.
 - **The log.** Sets are stored on the phone with SwiftData. A finished workout is saved to Apple Health as one workout, and, if the user allows it, heart rate and active calories are read for the set summary.
 
 None of this needs an account. Camera workouts work signed out, and if someone declines camera access the app falls back to manual counting.
 
 ## Making the count trustworthy
 
-Most of the work in counting reps from a pose stream is not detecting the movement. It is not counting the things that are not reps. The notes for a later TestFlight build list what I tightened: half reps, walking, standing up and getting into position no longer add reps, and counting keeps going for the whole workout.
+Most of the work in counting reps from a pose stream is not detecting the movement. It is not counting the things that are not reps. The App Store notes for version 1.0.86 list what I tightened: half reps, walking, standing up and getting into position no longer add reps, and counting keeps going for the whole workout.
+
+Inside the counter, a few rules do most of that work:
+
+- **Each move has a shape.** A squat only counts if the hips go down, the legs move together and the feet stay put. A push-up needs the hands planted below the shoulders. The angle alone can't tell a stride or a knee lift from a squat.
+- **Some moves need a posture first.** A row, a press, a curl and a pull-up are all an elbow bending, and so is talking with your hands. So a row only counts once you have been bent over and still for a moment, a pull-up once you are hanging, and a bench press once you are lying back.
+- **The first rep waits for a second one.** On squats, curls, presses, rows and deadlifts, a first rep is held for up to 8 seconds and only counts when another follows. A single bend while you talk or tidy up never becomes a set.
+- **The range is yours.** The first counted rep records your range, and later reps are judged against a share of it, never easier than a fixed floor.
 
 The rest of the work is around the counter rather than inside it:
 
 - **Get the person in frame first.** A short "3, 2, 1, Go" puts you in position before the clock starts. During the set the screen says what to do (Move back, Come closer, Step into frame), and a setup check before the first set shows the one fix needed if something is off.
-- **Always leave a manual path.** If the camera can't see you, minus and plus stay one tap away. With the voice coach on, you can also correct the count by saying "That was 10".
+- **Always leave a manual path.** If the camera can't see you, minus and plus stay one tap away. With the voice coach on, you can also correct the count by saying something like "That was 10".
 
-Changes to counting were the riskiest changes I made, because a wrong count is the first thing a user notices. So they go out behind feature flags. Camera counting has its own flag, internal builds have a pose debug overlay, and individual behaviours, such as asking for a count confirmation only when the counter is uncertain, can be turned off from the server without waiting for a new build to get through App Review.
+Changes to counting were the riskiest changes I made, because a wrong count is the first thing a user notices. So they go out behind feature flags. Camera counting has its own flag, MediaPipe has a switch that sends everyone back to Apple's Vision, and the internal team gets a pose debug overlay that only the server can turn on. Individual behaviours, such as asking for a count confirmation only when the counter is uncertain, can be turned off from the server without waiting for a new build to get through App Review.
 
-A rep checker model runs in shadow mode in internal builds, behind a flag. It sees the same sets as the live counter but never changes the count, so I can compare the two on real phones and real sets.
+I also trained a small rep classifier: gradient-boosted trees on pose features, trained only on data licensed for commercial use, and run on the phone with Core ML. It ships in the app, but it only runs for the internal team, behind a server flag, in shadow mode. It scores every candidate rep and never changes the count, so I can compare it with the live counter on real phones and real sets. The pose model itself is Google's. I haven't trained my own.
 
 ## What leaves the phone
 
@@ -65,14 +72,14 @@ The voice coach is the only feature that needs the network during a set, so it i
   caption="System overview: the SwiftUI app, the Lambda functions behind API Gateway, and the services they call."
 />
 
-The phone opens a WebRTC call to a realtime voice model, and audio goes straight from the phone to the voice service. What the model knows about the workout comes from short text notes about its state, sent over the WebRTC data channel. It never gets video frames.
+The phone opens a WebRTC call to a realtime voice model, and audio goes straight from the phone to the voice service. When the call opens, the backend gives the model your profile, your plan and your recent workouts. During the workout it gets short text notes about the state of the set over the WebRTC data channel and, if Apple Health is on, the set's heart rate and calories. It never gets video frames.
 
-The provider key never reaches the phone. The app asks the backend for a session. A Lambda function checks the feature flag, the user's access and their limits, reads the key from AWS Secrets Manager and mints a short-lived client secret for the call. The phone refreshes that secret before it expires, and if the connection drops it retries quietly a few times, waiting a little longer each time. If the realtime service is unavailable, the app falls back to on-device speech recognition and a text reply from the trainer endpoint, which the phone then speaks.
+The provider key never reaches the phone. The app asks the backend for a session. A Lambda function checks the feature flags, the user's access and their limits, reads the key from AWS Secrets Manager and mints a short-lived client secret for the call. The secret is only needed to open a call; a call that is already open keeps going. If the connection drops, the app mints a new secret and reconnects quietly, waiting a little longer between tries. While the coach is away, the app's own microphone takes over with Apple's speech recognition, on the device where the phone supports it. Workout commands such as "done" or "take a break" run on the phone, and anything else goes to the trainer as text and the reply is spoken.
 
 Two rules keep the coach from getting in the way:
 
-1. **The coach speaks rarely.** Counts, timers and cues are handled on the phone. The model speaks at the start, at each new exercise, at the end of each set, once during rest if there are at least 20 seconds left, at most once mid-set, at the end, and always if you mention pain.
-2. **The model asks; the app acts.** When you say "rest for 90 seconds" or "swap this, my shoulder hurts", the model replies with a tool call rather than changing anything itself:
+1. **The coach speaks rarely.** Counts, timers and cues are handled on the phone. The model speaks at the start, at each new exercise, at the end of each set, once during rest if there are at least 20 seconds left, at the end of each exercise and of the workout, and always if you mention pain. By default it gets one line at most in the middle of a set, for form, a stall or leaving the frame.
+2. **The model asks; the app acts.** When you say "rest for 90 seconds" or "swap this, my shoulder hurts", the model replies with a tool call rather than changing anything itself. These are some of the workout tools:
 
 ```text
 log_set          correct_reps     next_exercise    previous_exercise
@@ -89,7 +96,7 @@ The phone runs the tool against its own workout state and shows a small chip wit
 
 The backend is TypeScript on AWS Lambda (Node 22, arm64) behind API Gateway and CloudFront, defined with the AWS CDK. It is split into functions by job: one for profile, sessions and sync; one for the trainer and voice tokens; one for sign-in (Better Auth, with Sign in with Apple, Google and email codes); one for operations; and one for subscription webhooks. App data is in six on-demand DynamoDB tables with point-in-time recovery. Sign-in data is in Postgres on Neon.
 
-Two details matter for a phone that is often offline in a gym. Workout uploads honour an `Idempotency-Key` header and keep the response for a while, so a retried upload doesn't create a duplicate workout. And sync does a last-write-wins merge in batches, so the same log can follow you to another device. A later part covers the data model.
+Two details matter for a phone that is often offline in a gym. Workout uploads and sync honour an `Idempotency-Key` header and keep the response for an hour, so a retried upload doesn't create a duplicate workout. And sync does a last-write-wins merge in batches, so the same log can follow you to another device. A later part covers the data model.
 
 ## What I would do the same way again
 
