@@ -2,8 +2,8 @@ import * as stylex from '@stylexjs/stylex'
 import { createFileRoute } from '@tanstack/react-router'
 import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
-import { Rows, type Row } from '~/components/Rows'
-import { comingNotes, notes } from '~/content/notes'
+import { NoteList, type NoteItem } from '~/components/NoteList'
+import { comingNotes, noteListSummary, notes } from '~/content/notes'
 import { formatShortDate } from '~/lib/dates'
 import { feedPath } from '~/lib/feed'
 import { seo } from '~/lib/seo'
@@ -20,19 +20,16 @@ export const Route = createFileRoute('/notes/')({
 })
 
 function Notes() {
-  const rows: Row[] = [
-    ...notes.map((note) => ({
-      title: note.title,
-      href: note.path,
-      date: formatShortDate(note.date),
-      desc: note.listLabel,
-    })),
-    ...comingNotes.map((title, index) => ({
-      title,
-      date: 'Coming',
-      desc: `Workout Director, part ${notes.length + index + 1}`,
-    })),
-  ]
+  const published: NoteItem[] = notes.map((note) => ({
+    title: note.title,
+    href: note.path,
+    meta: `${formatShortDate(note.date)} · ${note.listLabel}`,
+    summary: noteListSummary(note),
+  }))
+  const coming: NoteItem[] = comingNotes.map((title, index) => ({
+    title,
+    meta: `Part ${notes.length + index + 1}`,
+  }))
   return (
     <Main>
       <div {...stylex.props(ui.column)}>
@@ -42,7 +39,9 @@ function Notes() {
             How Workout Director is built
           </h2>
           <p {...stylex.props(ui.muted, styles.sub)}>A series on the iPhone app and its backend.</p>
-          <Rows rows={rows} />
+          <NoteList items={published} />
+          <p {...stylex.props(ui.muted, styles.comingTitle)}>Coming next</p>
+          <NoteList items={coming} compact />
           <p {...stylex.props(ui.muted, styles.feed)}>
             New notes are also in the{' '}
             <a href={feedPath} type="application/atom+xml" {...stylex.props(ui.link)}>
@@ -57,6 +56,7 @@ function Notes() {
 }
 
 const styles = stylex.create({
-  sub: { marginTop: '0.3rem', marginBottom: '1rem' },
-  feed: { marginTop: '2rem', fontSize: '1rem' },
+  sub: { marginTop: '0.3rem', marginBottom: '2.25rem' },
+  comingTitle: { marginTop: '3rem', marginBottom: '1.25rem', fontSize: '0.9rem', fontWeight: 500 },
+  feed: { marginTop: '3rem', fontSize: '1rem' },
 })

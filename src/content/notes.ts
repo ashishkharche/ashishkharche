@@ -54,6 +54,19 @@ export function noteSummary(note: Pick<Note, 'description'>): string {
   return end === -1 ? note.description : note.description.slice(0, end + 1)
 }
 
+/**
+ * The summary for a note in a list that already shows its series label: the
+ * first sentence of the description without the leading "Workout Director,
+ * part 1: ", starting with a capital letter.
+ */
+export function noteListSummary(note: Pick<Note, 'description' | 'listLabel'>): string {
+  const summary = noteSummary(note)
+  const prefix = `${note.listLabel}: `
+  if (!summary.startsWith(prefix)) return summary
+  const rest = summary.slice(prefix.length)
+  return rest.charAt(0).toUpperCase() + rest.slice(1)
+}
+
 export function getNote(slug: string): Note | undefined {
   return notes.find((note) => note.slug === slug)
 }

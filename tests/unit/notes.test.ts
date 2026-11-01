@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { comingNotes, sortNotes, toNote, type Note, noteSummary } from '~/content/notes'
+import { comingNotes, noteListSummary, sortNotes, toNote, type Note, noteSummary } from '~/content/notes'
 
 const base = { title: 'T', date: '2026-10-30', series: 'S', part: 1, listLabel: 'L', description: 'D' }
 
@@ -55,5 +55,19 @@ describe('the Workout Director series', () => {
     const section = body.slice(body.indexOf('## Next in the series'))
     const listed = [...section.matchAll(/^- Part \d+: (.+)$/gm)].map((match) => match[1])
     expect(listed).toEqual(comingNotes)
+  })
+})
+
+describe('noteListSummary', () => {
+  it('drops the series label and capitalises the rest', () => {
+    const note = {
+      listLabel: 'Workout Director, part 1',
+      description: 'Workout Director, part 1: the camera feed never leaves the iPhone. More text.',
+    }
+    expect(noteListSummary(note)).toBe('The camera feed never leaves the iPhone.')
+  })
+
+  it('keeps a summary without the label as it is', () => {
+    expect(noteListSummary({ listLabel: 'Part 1', description: 'Something else. More.' })).toBe('Something else.')
   })
 })

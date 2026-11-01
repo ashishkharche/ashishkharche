@@ -3,13 +3,13 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Availability } from '~/components/Availability'
 import { Logo } from '~/components/Logo'
 import { Main } from '~/components/Main'
+import { NoteList } from '~/components/NoteList'
 import { PhoneRow } from '~/components/PhoneRow'
 import { ProjectCard } from '~/components/ProjectCard'
-import { Rows } from '~/components/Rows'
 import { SectionHead } from '~/components/SectionHead'
 import { kaloCard, workoutDirectorCard } from '~/content/projects'
 import type { ScreenId } from '~/content/workoutDirectorScreens'
-import { notes, noteSummary } from '~/content/notes'
+import { noteListSummary, notes } from '~/content/notes'
 import { site } from '~/content/site'
 import { formatShortDate } from '~/lib/dates'
 import { seo } from '~/lib/seo'
@@ -42,8 +42,8 @@ function Home() {
   const latestNotes = notes.slice(0, 3).map((note) => ({
     title: note.title,
     href: note.path,
-    date: formatShortDate(note.date),
-    desc: noteSummary(note),
+    meta: `${formatShortDate(note.date)} · ${note.listLabel}`,
+    summary: noteListSummary(note),
   }))
   return (
     <Main>
@@ -92,7 +92,7 @@ function Home() {
         <section aria-labelledby="notes-title" {...stylex.props(ui.section)}>
           <SectionHead id="notes-title" title="Notes" to="/notes/" linkLabel="All notes" />
           <div {...stylex.props(styles.notes)}>
-            <Rows rows={latestNotes} />
+            <NoteList items={latestNotes} />
           </div>
         </section>
 
