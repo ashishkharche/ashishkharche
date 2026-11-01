@@ -81,7 +81,7 @@ function Home() {
               <p {...stylex.props(styles.appTitle)}>
                 <Logo name="workoutDirector" size={20} inline />
                 <span>
-                  <span {...stylex.props(styles.appName)}>Workout Director</span>, the iPhone and iPad app I built
+                  <span {...stylex.props(styles.appName)}>Workout Director</span>, iPhone and iPad app
                 </span>
               </p>
               <p {...stylex.props(styles.appLinks)}>
