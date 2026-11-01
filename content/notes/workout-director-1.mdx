@@ -23,15 +23,15 @@ Keeping the camera local gave me a privacy promise I could state plainly in the 
 <Diagram
   diagram={onDevice}
   wide
-  title="Diagram of what stays on the iPhone (front or back camera frames, pose tracking, rep counter, workout state, local log) and what leaves it (short text state notes to the voice coach, synced sets to the backend). Video never leaves the phone."
+  title="Diagram of what stays on the iPhone (front or back camera frames, pose tracking, rep counter, workout state, local log) and what leaves it (short text state notes and, when the coach is on, your voice from the microphone to the voice coach; synced sets to the backend)."
   caption="What stays on the iPhone and what leaves it. The camera feed never leaves the device."
 />
 
 ## What runs on the phone
 
 <Shots
-  screens={['02-voice', '04-manual', '07-progress']}
-  caption="The camera counting a push-up set, with examples of what you can say to the coach; typing in reps without the camera; and the workout summary afterwards. App Store screenshots."
+  screens={['02-voice-pexels', '04-manual', '07-progress']}
+  caption="A deadlift set on the live camera, with examples of what you can say to the coach; typing in reps without the camera; and the workout summary afterwards. App Store screenshots."
 />
 
 - **Pose tracking.** Google's MediaPipe Pose Landmarker runs on the device with the BlazePose Full model. The model file ships inside the app, so nothing is downloaded at run time and no account is needed. If MediaPipe can't start, or runs below 12 frames a second, that workout switches to Apple's Vision body pose and keeps the count.
@@ -59,7 +59,7 @@ The rest of the work is around the counter rather than inside it:
 
 Changes to counting were the riskiest changes I made, because a wrong count is the first thing a user notices. So they go out behind feature flags. Camera counting has its own flag, MediaPipe has a switch that sends everyone back to Apple's Vision, and the internal team gets a pose debug overlay that only the server can turn on. Individual behaviours, such as asking for a count confirmation only when the counter is uncertain, can be turned off from the server without waiting for a new build to get through App Review.
 
-I also trained a small rep classifier: gradient-boosted trees on pose features, trained only on data licensed for commercial use, and run on the phone with Core ML. It ships in the app, but it only runs for the internal team, behind a server flag, in shadow mode. It scores every candidate rep and never changes the count, so I can compare it with the live counter on real phones and real sets. The pose model itself is Google's. I haven't trained my own.
+I also trained a small rep classifier: gradient-boosted trees on pose features, run on the phone with Core ML. It ships in the app, but it only runs for the internal team, behind a server flag, in shadow mode. It scores every candidate rep and never changes the count, so I can compare it with the live counter on real phones and real sets. The pose model itself is Google's. I haven't trained my own.
 
 ## What leaves the phone
 

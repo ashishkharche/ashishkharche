@@ -98,7 +98,12 @@ describe('brand rules', () => {
     const { hasFootage, footageCredit } = await import('~/content/workoutDirectorScreens')
     expect(hasFootage(['02-voice'])).toBe(true)
     expect(hasFootage(['04-manual', '07-progress'])).toBe(false)
-    expect(footageCredit).toBe('Footage: Mixkit, free licence.')
+    expect(footageCredit(['02-voice', '04-manual'])).toBe('Footage: Mixkit, free licence.')
+    expect(footageCredit(['02-voice-pexels', '04-manual', '07-progress'])).toBe('Footage: cottonbro studio on Pexels.')
+    expect(footageCredit(['02-voice', '02-voice-pexels'])).toBe(
+      'Footage: Mixkit, free licence; cottonbro studio on Pexels.',
+    )
+    expect(footageCredit(['04-manual', '07-progress'])).toBe('')
   })
 
   it('shows no light Kalo screenshots next to the dark Workout Director screens', async () => {

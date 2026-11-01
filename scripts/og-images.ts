@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { chromium } from '@playwright/test'
 import { noteOgImages, ogImages } from '../src/content/ogImages.ts'
+import { footageCredit, type ScreenId } from '../src/content/workoutDirectorScreens.ts'
 
 const root = new URL('../', import.meta.url).pathname
 const publicDir = join(root, 'public')
@@ -46,7 +47,8 @@ const cards: Card[] = [
     eyebrow: 'Notes · Workout Director, part 1',
     title: 'Counting reps without the video leaving the phone',
     footer: 'ashishkharche.com/notes',
-    phones: ['/assets/img/wd/iphone/02-voice-800.webp'],
+    // The note shows the Pexels capture of the Voice screen, so its card does too.
+    phones: ['/assets/img/wd/iphone/02-voice-pexels-800.webp'],
   },
   {
     src: noteOgImages['workout-director-2'].src,
@@ -73,8 +75,9 @@ function html(card: Card, brand: string): string {
   const art = card.phones
     ? card.phones.map((src) => `<img class="phone" src="${asset(src)}" alt="">`).join('')
     : (card.figures ?? []).map((src) => `<img class="figure" src="${asset(src)}" alt="">`).join('')
-  // The camera screens show Mixkit stock footage, credited under the phones.
-  const footage = (card.phones ?? []).some((src) => /\/0[123]-[a-z-]+-800\.webp$/.test(src))
+  // The camera screens show stock footage, credited under the phones.
+  const ids = (card.phones ?? []).map((src) => /\/([0-9]{2}-[a-z-]+)-800\.webp$/.exec(src)?.[1] as ScreenId)
+  const footage = footageCredit(ids).replace(/\.$/, '')
   const textWidth = card.phones
     ? 1200 - 144 - card.phones.length * 245 - 40
     : card.figures
@@ -106,7 +109,7 @@ ${card.subtitle ? `<p class="subtitle">${escape(card.subtitle)}</p>` : ''}
 ${card.footer ? `<p class="footer">${escape(card.footer)}</p>` : ''}
 </div>
 ${art ? `<div class="art">${art}</div>` : ''}
-${footage ? '<p class="credit">Footage: Mixkit, free licence</p>' : ''}
+${footage ? `<p class="credit">${escape(footage)}</p>` : ''}
 </div></body></html>`
 }
 

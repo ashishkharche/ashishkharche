@@ -41,7 +41,7 @@ I wanted one consistent figure across every move, light and dark versions, and a
 ## The pieces
 
 - **The body.** The base mesh and the shape targets come from MakeHuman's MPFB2 data, and the 163-bone default rig and its weights from MakeHuman itself. All of it is CC0. The script builds the body directly from those files, so no Blender add-on is needed. Targets push it towards an athletic build, and corrective shape keys keep elbows and knees from collapsing when they bend.
-- **Clothes.** Shorts, a tee or tank and trainers are real cut geometry, so hems and collars draw as clean lines instead of texture.
+- **Clothes.** Shorts, a t-shirt and trainers are real cut geometry, so hems and collars draw as clean lines instead of texture.
 - **Equipment.** Dumbbells, barbells and plates, kettlebells, benches and machines are built in code at real-world sizes.
 - **Reference images.** Photos from free-exercise-db (public domain, under the Unlicense) show the start and end of each move. Where a photo was a front view or didn't show good form, I also compared the pose with frames from exercise demo videos, and only the measurements went into the checks.
 - **Rendering.** Blender 4.2 in the background, Cycles on the CPU with flat emission shading, and Freestyle for the lines. Each still takes a few seconds.
@@ -227,7 +227,7 @@ The few anatomical lines that an illustrator would draw, such as the edge of the
 Two problems took longer than I expected:
 
 - **Lines under clothes.** Freestyle's visibility test is unreliable when a garment sits a few millimetres off the skin, so body lines showed through the shirt. The fix was to remove body edge marks wherever a garment covers the same rest-pose vertices, found with a KD-tree on a copy of the garment.
-- **Lines that pop between frames.** On the bench press loop, the outline of the near arm briefly disappeared for a frame or two. Rendering one line set at a time showed why: at that pose the edge of the bar lay exactly on the arm's outline, so two strokes merged into one. The fix was a render option that draws a background-coloured halo under every equipment outline, so body lines next to the bar are always cut back by the same amount.
+- **Lines that pop between frames.** In an experimental bench press animation, the outline of the near arm briefly disappeared for a frame or two. Rendering one line set at a time showed why: at that pose the edge of the bar lay exactly on the arm's outline, so two strokes merged into one. I tried a render option that draws a background-coloured halo under the equipment outlines, but it is experimental, off by default and only set up for the bench, and its render still failed the flicker check. This one isn't solved yet. The app only uses still start and end figures, so it doesn't show this.
 
 ## Checks before a figure ships
 
@@ -238,7 +238,7 @@ A figure that looks fine at a glance can still be wrong: a knee bent the wrong w
 - **Physics and equipment.** Nothing sinks into the floor or the bench, nothing passes through itself or the equipment, the bar is level, plates are symmetric, and equipment is the right size.
 - **Grip.** No fingers through the handle, no gap between palm and handle, thumb wrapped, knuckles along the bar, wrist neutral.
 - **MediaPipe on the render.** The finished figure is run back through the pose model, on several backgrounds and crops, and compared with the reference images using measures that don't depend on the view: ankle angle, which way the foot points, where the hands sit along the body, segment angles to the trunk. If a pose model can't read the drawing as the same pose, a person might not either.
-- **Animation.** For the looping versions: no foot sliding, constant bone lengths, no velocity spikes, a seamless loop and no line flicker between frames.
+- **Animation.** The app ships still start and end figures, not animations. The experimental animated versions get extra checks: no foot sliding, constant bone lengths, no velocity spikes, a seamless loop and no line flicker between frames.
 
 Changes to shared code are checked against figures that have already shipped: the figures are re-rendered and compared, so a fix for one move can't quietly change another.
 

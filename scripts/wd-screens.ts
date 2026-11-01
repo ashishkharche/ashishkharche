@@ -1,13 +1,15 @@
 // Makes the web copies of the Workout Director App Store screens: AVIF and
 // WebP at the widths in src/content/workoutDirectorScreens.ts, for the screens
 // listed there. Reads the PNGs from <folder>/iphone69 and <folder>/ipad13 and
-// never changes them. Old copies of screens no longer listed are removed.
+// never changes them. Old copies of screens no longer listed are removed,
+// except the iPhone copies of the extra screens, which are not made from the set.
 // Usage: pnpm wd-screens <folder with iphone69/ and ipad13/>
 import { mkdir, readdir, rm } from 'node:fs/promises'
 import { basename, join } from 'node:path'
 import sharp from 'sharp'
 import {
   deviceSize,
+  extraScreenIds,
   screenPath,
   screenWidths,
   shownScreenIds,
@@ -24,6 +26,10 @@ for (const device of ['iphone', 'ipad'] as const) {
   const outDir = join(publicDir, 'assets/img/wd', device)
   await mkdir(outDir, { recursive: true })
   const keep = new Set<string>()
+  if (device === 'iphone')
+    for (const id of extraScreenIds)
+      for (const width of screenWidths.iphone)
+        for (const format of ['avif', 'webp'] as const) keep.add(basename(screenPath(id, device, width, format)))
   for (const id of shownScreenIds) {
     const input = join(source, folders[device], `${id}.png`)
     const meta = await sharp(input).metadata()

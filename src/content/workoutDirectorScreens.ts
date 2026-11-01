@@ -24,8 +24,22 @@ export interface Screen {
   label: string
   /** What the screen shows, used as alt text. The headline on the screen comes first. */
   alt: string
-  /** The camera view shows licensed stock footage (Mixkit) played into the app, so it carries a credit. */
-  footage?: boolean
+  /** Where the stock footage played into the camera view comes from, so the screen carries a credit. */
+  footage?: FootageSource
+}
+
+/** Stock footage libraries used in the camera screens. */
+export type FootageSource = 'mixkit' | 'pexels'
+
+/**
+ * The credit for each library. Neither licence requires one, but both ask for
+ * it. The Pexels clip in 02-voice-pexels is "A Woman Lifting A Barbell" by
+ * cottonbro studio (https://www.pexels.com/video/7674505/), under the Pexels
+ * licence (https://www.pexels.com/license/).
+ */
+const footageCredits: Record<FootageSource, string> = {
+  mixkit: 'Mixkit, free licence',
+  pexels: 'cottonbro studio on Pexels',
 }
 
 const allScreens = {
@@ -33,19 +47,19 @@ const allScreens = {
     id: '01-rep-counting',
     label: 'Rep counting',
     alt: 'Every rep, counted for you. A goblet squat set on camera, with the count at 2 of 10, set 1 of 4, at 16 kg.',
-    footage: true,
+    footage: 'mixkit',
   },
   '02-voice': {
     id: '02-voice',
     label: 'Voice',
     alt: 'Hands busy? Just say it. A man doing push-ups on a balcony, counted on the live camera at 4 of 12, with example requests such as "Add a set" and "Give me 30 seconds".',
-    footage: true,
+    footage: 'mixkit',
   },
   '03-live-coach': {
     id: '03-live-coach',
     label: 'Live Coach',
     alt: 'A coach in your corner. A man doing push-ups on the live camera, counted at 7 of 12, while the voice coach tells him to brace his core.',
-    footage: true,
+    footage: 'mixkit',
   },
   '04-manual': {
     id: '04-manual',
@@ -72,6 +86,17 @@ const allScreens = {
     label: 'Today',
     alt: "Today's workout, ready when you are. A 14 minute full body plan for the day with a Start workout button.",
   },
+  // Not in the gallery: the same Voice screen as 02-voice, captured with a
+  // Pexels deadlift clip in the camera view instead of the Mixkit push-up clip
+  // (commit 040fe69 on fix/selected-work-cards). Only note 1 shows it, until
+  // the rest of the site moves to the Pexels captures. iPhone copies only, so
+  // `pnpm wd-screens` leaves its files alone.
+  '02-voice-pexels': {
+    id: '02-voice-pexels',
+    label: 'Voice',
+    alt: 'Hands busy? Just say it. A woman lifting a barbell deadlift on the live camera, at the start of a set of 6, with example requests such as "Add a set" and "Give me 30 seconds".',
+    footage: 'pexels',
+  },
 } satisfies Record<string, Screen>
 
 export type ScreenId = keyof typeof allScreens
@@ -92,18 +117,26 @@ export const shownScreenIds: ScreenId[] = [
   '08-today',
 ]
 
-export const screens: Screen[] = shownScreenIds.map((id) => allScreens[id])
+/** Screens that have web copies but are not in the gallery (iPhone copies only). */
+export const extraScreenIds: ScreenId[] = ['02-voice-pexels']
 
-/** Credit for the stock footage in the camera screens. Mixkit asks for, but does not require, a credit. */
-export const footageCredit = 'Footage: Mixkit, free licence.'
+export const screens: Screen[] = shownScreenIds.map((id) => allScreens[id])
 
 /** Whether any of these screens shows stock footage, so the credit should be shown with them. */
 export function hasFootage(ids: readonly ScreenId[]): boolean {
   return ids.some((id) => Boolean((allScreens[id] as Screen).footage))
 }
 
+/** The footage credit for a group of screens, naming only the libraries those screens use. */
+export function footageCredit(ids: readonly ScreenId[]): string {
+  const sources = new Set(ids.flatMap((id) => (allScreens[id] as Screen).footage ?? []))
+  const names = (['mixkit', 'pexels'] as const).filter((source) => sources.has(source)).map((s) => footageCredits[s])
+  return names.length ? `Footage: ${names.join('; ')}.` : ''
+}
+
 export function screen(id: ScreenId): Screen {
-  if (!shownScreenIds.includes(id)) throw new Error(`Screen ${id} is not in shownScreenIds`)
+  if (!shownScreenIds.includes(id) && !extraScreenIds.includes(id))
+    throw new Error(`Screen ${id} is not in shownScreenIds or extraScreenIds`)
   return allScreens[id]
 }
 

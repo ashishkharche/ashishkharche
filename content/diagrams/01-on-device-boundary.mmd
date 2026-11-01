@@ -7,7 +7,8 @@ flowchart TB
     REPS --> STATE["Workout state: set, reps, rest"]
     STATE --> LOG[("Local log (SwiftData)")]
     LOG --> HK["Apple Health: finished workout"]
+    MIC["Microphone"]
   end
-  STATE -- "short text state notes, no video" --> VOICE["Voice coach (realtime audio)"]
+  STATE -- "short text state notes" --> VOICE["Voice coach (realtime audio)"]
+  MIC -- "your voice, when the coach is on" --> VOICE
   LOG -. "signed in: sync sets and sessions" .-> API["Backend API"]
-  CAM -. "video never recorded, saved or uploaded" .-x OUT(("Off the phone"))

@@ -31,7 +31,7 @@ interface PictureProps {
 /** The stock footage credit, shown under any group of screens that has a camera view in it. */
 export function FootageCredit({ ids }: { ids: readonly ScreenId[] }) {
   if (!hasFootage(ids)) return null
-  return <p {...stylex.props(styles.credit)}>{footageCredit}</p>
+  return <p {...stylex.props(styles.credit)}>{footageCredit(ids)}</p>
 }
 
 /** One App Store screen: AVIF where the browser takes it, WebP otherwise, at the size it is shown. */
@@ -109,7 +109,7 @@ export function Shots({ screens: ids, caption }: { screens: ScreenId[]; caption:
       ))}
       <figcaption {...stylex.props(styles.caption, styles.fullRow)}>
         {caption}
-        {hasFootage(ids) ? ` ${footageCredit}` : null}
+        {hasFootage(ids) ? ` ${footageCredit(ids)}` : null}
       </figcaption>
     </figure>
   )
