@@ -11,7 +11,7 @@ test('the home intro links to the App Store listing and the app website, with th
   await expect(store).toHaveAttribute('href', links.workoutDirectorStore)
   await expect(website).toHaveAttribute('href', links.workoutDirectorSite)
   await expect(intro.getByRole('link', { name: 'Case study' })).toHaveAttribute('href', '/projects/workout-director/')
-  const stack = intro.locator('p', { hasText: /^Built with/ })
+  const stack = intro.getByRole('list', { name: 'Built with' })
   await expect(stack).toContainText('SwiftUI')
   await expect(stack).toBeInViewport()
   await expect(store).toBeInViewport()
