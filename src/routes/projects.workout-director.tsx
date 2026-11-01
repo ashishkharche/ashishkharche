@@ -9,7 +9,7 @@ import { Main } from '~/components/Main'
 import { PageHead } from '~/components/PageHead'
 import { Muted, Prose, mdxComponents } from '~/components/Prose'
 import { DeviceStage, ScreenRail, Shots } from '~/components/Screens'
-import { workoutDirectorCard, workoutDirectorHero } from '~/content/projects'
+import { workoutDirectorCard, workoutDirectorHero, workoutDirectorStack } from '~/content/projects'
 import { links } from '~/content/site'
 import { stagePreload } from '~/content/workoutDirectorScreens'
 import { seo } from '~/lib/seo'
@@ -68,7 +68,7 @@ function WorkoutDirector() {
         <Facts
           items={[
             { term: 'My part', detail: 'SwiftUI app, TypeScript backend, releases' },
-            { term: 'Stack', detail: 'SwiftUI, SwiftData, MediaPipe, WebRTC, AWS Lambda, DynamoDB, AWS CDK' },
+            { term: 'Stack', detail: workoutDirectorStack.join(', ') },
             { term: 'Published by', detail: 'Shelgaon Ltd' },
             {
               term: 'Links',
@@ -79,7 +79,7 @@ function WorkoutDirector() {
                   </a>{' '}
                   ·{' '}
                   <a href={links.workoutDirectorSite} {...stylex.props(ui.link)}>
-                    Website
+                    workoutdirector.com
                   </a>
                 </>
               ),

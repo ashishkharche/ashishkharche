@@ -16,6 +16,32 @@ export function screenshotSrcSet(name: string): string {
   return `${screenshotSrc(name, 480)} 480w, ${screenshotSrc(name, 960)} 960w`
 }
 
+export interface ExternalLink {
+  label: string
+  href: string
+}
+
+/** What the shipped Workout Director app and its backend are built with. Nothing that is only in testing. */
+export const workoutDirectorStack = [
+  'Swift',
+  'SwiftUI',
+  'SwiftData',
+  'MediaPipe BlazePose',
+  'Apple Vision',
+  'WebRTC',
+  'TypeScript',
+  'AWS Lambda',
+  'DynamoDB',
+  'AWS CDK',
+  'Better Auth',
+  'Postgres',
+] as const
+
+export const workoutDirectorLinks: ExternalLink[] = [
+  { label: 'App Store', href: links.workoutDirectorStore },
+  { label: 'workoutdirector.com', href: links.workoutDirectorSite },
+]
+
 export interface ProjectCard {
   title: string
   href: string
@@ -23,6 +49,8 @@ export interface ProjectCard {
   summary: string
   meta: string
   logo: LogoName
+  /** Outside links shown under the summary, such as the App Store listing. */
+  links?: ExternalLink[]
   /** Three phone screenshots in a row. */
   shots?: Screenshot[]
   /** Or an iPad and two iPhone screens, layered. */
@@ -37,6 +65,7 @@ export const workoutDirectorCard: ProjectCard = {
     'An iPhone and iPad training app that counts reps with the front camera, on the device, while a voice coach talks you through the workout.',
   meta: 'SwiftUI · TypeScript on AWS Lambda · Case study',
   logo: 'workoutDirector',
+  links: workoutDirectorLinks,
   stage: { ipad: '05-form', phones: ['02-voice', '08-today'] },
 }
 

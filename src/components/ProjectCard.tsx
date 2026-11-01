@@ -4,6 +4,7 @@ import { Logo } from './Logo'
 import { DeviceStage } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
+import { ui } from '~/styles/ui'
 
 interface Props {
   card: Card
@@ -71,7 +72,22 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
             <p {...stylex.props(styles.meta)}>{card.meta}</p>
           </div>
         </div>
-        <p {...stylex.props(styles.text)}>{card.summary}</p>
+        <div>
+          <p {...stylex.props(styles.text)}>{card.summary}</p>
+          {card.links?.length ? (
+            <p {...stylex.props(styles.outLinks)}>
+              {card.links.map((link) => (
+                <a key={link.href} href={link.href} {...stylex.props(ui.link, styles.outLink)}>
+                  {link.label}
+                  <span aria-hidden="true" {...stylex.props(styles.outArrow)}>
+                    {' '}
+                    ↗
+                  </span>
+                </a>
+              ))}
+            </p>
+          ) : null}
+        </div>
       </div>
     </article>
   )
@@ -132,5 +148,18 @@ const styles = stylex.create({
   // Geist Serif has no diagonal arrow, so the arrows use the body font.
   arrow: { display: 'inline-block', fontFamily: fonts.sans, fontSize: '0.8em' },
   meta: { marginTop: '0.4rem', fontSize: '0.95rem', color: colors.muted },
+  // Sit above the card's full-size link so these open their own pages.
+  outLinks: {
+    position: 'relative',
+    zIndex: 1,
+    display: 'flex',
+    flexWrap: 'wrap',
+    rowGap: '0.4rem',
+    columnGap: '1.25rem',
+    marginTop: '1rem',
+    fontSize: '1rem',
+  },
+  outLink: { position: 'relative', zIndex: 1 },
+  outArrow: { fontSize: '0.8em' },
   text: { fontSize: 'clamp(1.05rem, 1.8vw, 1.2rem)', lineHeight: 1.55, color: colors.muted, maxWidth: '34em' },
 })
