@@ -29,9 +29,9 @@ interface PictureProps {
 }
 
 /** The stock footage credit, shown under any group of screens that has a camera view in it. */
-export function FootageCredit({ ids }: { ids: readonly ScreenId[] }) {
+export function FootageCredit({ ids, xstyle }: { ids: readonly ScreenId[]; xstyle?: stylex.StyleXStyles }) {
   if (!hasFootage(ids)) return null
-  return <p {...stylex.props(styles.credit)}>{footageCredit}</p>
+  return <p {...stylex.props(styles.credit, xstyle)}>{footageCredit}</p>
 }
 
 /** One App Store screen: AVIF where the browser takes it, WebP otherwise, at the size it is shown. */
@@ -62,6 +62,8 @@ interface StageProps extends StageSpec {
   /** Load straight away, for a stage at the top of the page. */
   priority?: boolean
   label?: string
+  /** Show the footage credit under the stage. A project card turns this off and shows it under its text instead. */
+  credit?: boolean
 }
 
 /**
@@ -70,7 +72,7 @@ interface StageProps extends StageSpec {
  * scroll-driven animation and motion is not reduced. Without that, or without
  * JavaScript, it is the same picture standing still.
  */
-export function DeviceStage({ ipad, phones, size = 'card', priority = false, label }: StageProps) {
+export function DeviceStage({ ipad, phones, size = 'card', priority = false, label, credit = true }: StageProps) {
   const hero = size === 'hero'
   return (
     <>
@@ -95,7 +97,7 @@ export function DeviceStage({ ipad, phones, size = 'card', priority = false, lab
           <ScreenPicture id={phones[1]} device="iphone" sizes={stageSizes.iphone} xstyle={styles.lifted} />
         </div>
       </div>
-      <FootageCredit ids={[ipad, ...phones]} />
+      {credit ? <FootageCredit ids={[ipad, ...phones]} /> : null}
     </>
   )
 }

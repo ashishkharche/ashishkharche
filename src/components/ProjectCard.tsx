@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { Link } from '@tanstack/react-router'
 import { Logo } from './Logo'
-import { DeviceStage } from './Screens'
+import { DeviceStage, FootageCredit } from './Screens'
 import { screenshotSrc, screenshotSrcSet, type ProjectCard as Card } from '~/content/projects'
 import { breakpoints, colors, fonts } from '~/styles/tokens.stylex'
 
@@ -14,14 +14,16 @@ interface Props {
 
 /**
  * A project shown as its screenshots, large on the page, with the title and
- * summary underneath: either three phone screens in a row or, for a project
- * with a stage, an iPad and two iPhones layered on a soft panel. A project
- * with neither shows only its title and summary. Projects after the first get
- * a thin rule above.
+ * summary directly underneath: either three phone screens in a row or, for a
+ * project with a stage, an iPad and two iPhones layered on a soft panel. A
+ * project with neither shows only its title and summary. The screens, title
+ * and summary are one link to the project. Any footage credit sits under the
+ * summary, outside the link. Projects after the first get a thin rule above.
  */
 export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Props) {
   const Heading = headingLevel
   const linkProps = stylex.props(styles.link)
+  const hasMedia = Boolean(card.stage || card.shots?.length)
   const label = (
     <>
       {card.title}{' '}
@@ -31,60 +33,64 @@ export function ProjectCard({ card, headingLevel = 'h3', priority = false }: Pro
     </>
   )
   return (
-    <article {...stylex.props(stylex.defaultMarker(), styles.project)}>
-      {card.stage ? (
-        <DeviceStage ipad={card.stage.ipad} phones={card.stage.phones} priority={priority} />
-      ) : card.shots?.length ? (
-        <div {...stylex.props(styles.media)}>
-          {(card.shots ?? []).map((shot, index) => (
-            <img
-              key={shot.name}
-              src={screenshotSrc(shot.name)}
-              srcSet={screenshotSrcSet(shot.name)}
-              sizes="(max-width: 760px) 30vw, 290px"
-              width={480}
-              height={1038}
-              alt={shot.alt}
-              loading={priority ? 'eager' : 'lazy'}
-              fetchPriority={priority && index === 1 ? 'high' : 'auto'}
-              decoding="async"
-              {...stylex.props(styles.phone)}
-            />
-          ))}
-        </div>
-      ) : null}
-      <div {...stylex.props(styles.body, !card.stage && !card.shots?.length && styles.bodyOnly)}>
-        <div {...stylex.props(styles.head)}>
-          <Logo name={card.logo} size={40} />
-          <div>
-            <Heading {...stylex.props(styles.title)}>
-              {card.external ? (
-                <a href={card.href} {...linkProps}>
-                  {label}
-                </a>
-              ) : (
-                <Link to={card.href} {...linkProps}>
-                  {label}
-                </Link>
-              )}
-            </Heading>
-            <p {...stylex.props(styles.meta)}>{card.meta}</p>
+    <article {...stylex.props(styles.project)}>
+      <div {...stylex.props(stylex.defaultMarker(), styles.card)}>
+        {card.stage ? (
+          <DeviceStage ipad={card.stage.ipad} phones={card.stage.phones} priority={priority} credit={false} />
+        ) : card.shots?.length ? (
+          <div {...stylex.props(styles.media)}>
+            {(card.shots ?? []).map((shot, index) => (
+              <img
+                key={shot.name}
+                src={screenshotSrc(shot.name)}
+                srcSet={screenshotSrcSet(shot.name)}
+                sizes="(max-width: 760px) 30vw, 290px"
+                width={480}
+                height={1038}
+                alt={shot.alt}
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority && index === 1 ? 'high' : 'auto'}
+                decoding="async"
+                {...stylex.props(styles.phone)}
+              />
+            ))}
           </div>
+        ) : null}
+        <div {...stylex.props(styles.body, !hasMedia && styles.bodyOnly)}>
+          <div {...stylex.props(styles.head)}>
+            <Logo name={card.logo} size={40} />
+            <div>
+              <Heading {...stylex.props(styles.title)}>
+                {card.external ? (
+                  <a href={card.href} {...linkProps}>
+                    {label}
+                  </a>
+                ) : (
+                  <Link to={card.href} {...linkProps}>
+                    {label}
+                  </Link>
+                )}
+              </Heading>
+              <p {...stylex.props(styles.meta)}>{card.meta}</p>
+            </div>
+          </div>
+          <p {...stylex.props(styles.text)}>{card.summary}</p>
         </div>
-        <p {...stylex.props(styles.text)}>{card.summary}</p>
       </div>
+      {card.stage ? <FootageCredit ids={[card.stage.ipad, ...card.stage.phones]} xstyle={styles.credit} /> : null}
     </article>
   )
 }
 
 const styles = stylex.create({
   project: {
-    position: 'relative',
     paddingTop: { default: '4.5rem', ':first-child': 0, [breakpoints.tablet]: '3rem' },
     borderTopWidth: { default: '1px', ':first-child': 0 },
     borderTopStyle: 'solid',
     borderTopColor: colors.line,
   },
+  // The clickable area: the link's ::after covers the screens, title and summary.
+  card: { position: 'relative' },
   media: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -106,7 +112,7 @@ const styles = stylex.create({
     columnGap: '3rem',
     rowGap: '0.6rem',
     alignItems: 'baseline',
-    marginTop: { default: '2.5rem', [breakpoints.tablet]: '1.75rem' },
+    marginTop: { default: '1.5rem', [breakpoints.tablet]: '1.1rem' },
   },
   // A project shown without screens: just the title and summary under the rule.
   bodyOnly: { marginTop: 0 },
@@ -120,7 +126,12 @@ const styles = stylex.create({
   },
   link: {
     color: { default: colors.text, [stylex.when.ancestor(':hover')]: colors.accent },
-    textDecorationLine: { default: 'none', ':focus-visible': 'underline' },
+    textDecorationLine: {
+      default: 'none',
+      [stylex.when.ancestor(':hover')]: 'underline',
+      ':focus-visible': 'underline',
+    },
+    textDecorationThickness: '1px',
     textUnderlineOffset: '0.2em',
     outline: 'none',
     '::after': {
@@ -133,4 +144,6 @@ const styles = stylex.create({
   arrow: { display: 'inline-block', fontFamily: fonts.sans, fontSize: '0.8em' },
   meta: { marginTop: '0.4rem', fontSize: '0.95rem', color: colors.muted },
   text: { fontSize: 'clamp(1.05rem, 1.8vw, 1.2rem)', lineHeight: 1.55, color: colors.muted, maxWidth: '34em' },
+  // Smaller and lighter than the summary, so it reads as a note rather than part of the card.
+  credit: { marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8 },
 })
